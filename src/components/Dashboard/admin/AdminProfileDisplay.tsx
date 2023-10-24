@@ -20,9 +20,7 @@ const AdminProfileDisplay: React.FC = () => {
       console.log(currentUser)
       /* Fetch the single admin by userId instead.. use the currentUser 
       object to get userId, Do the same for all profile  {userId,role,profilePicture,displayName} */
-      const response = await fetch(`/api/admins/${currentUser?.userId || "dcc3d3a5-f1bc-49c6-bd73-f4bf7747482d"}`, {
-        cache: "no-cache",
-      });
+      const response = await fetch(`/api/admins/${currentUser?.userId}`);
       const data = await response.json();
       if (response.status === 200) {
         console.log(data.admin);

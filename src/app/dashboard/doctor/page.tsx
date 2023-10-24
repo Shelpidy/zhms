@@ -4,9 +4,6 @@ import {
   GroupAdd,
   Groups,
   MenuOutlined,
-  PostAdd,
-  ShoppingBagOutlined,
-  VerifiedUserOutlined,
 } from "@mui/icons-material";
 import { IconButton, Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -14,9 +11,6 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import React, { useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 
-import DoctorForm from "@/components/AddDoctorForm";
-import AppointmentForm from "@/components/AppointmentForm";
-import UserModal from "@/components/UserModal";
 import DoctorProfileDisplay from "@/components/Dashboard/doctor/DoctorProfileDisplay";
 import DoctorAppointmentDisplay from "@/components/Dashboard/doctor/DoctorAppointmentDisplay";
 

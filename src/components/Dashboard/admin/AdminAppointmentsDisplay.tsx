@@ -29,7 +29,7 @@ type PatientProfile = {
   roomId:string
 };
 
-export type AppointmentDetail = {
+type AppointmentDetail = {
   doctor: DoctorProfile;
   patient: PatientProfile;
   appointment: Appointment;
@@ -116,11 +116,12 @@ const AdminAppointmentsDisplay: React.FC = () => {
     try {
       const response = await fetch(
         `/api/appointments/admins/${currentUser?.userId}`,
-        { cache: "no-cache" },
+        {next:{revalidate:0}},
       );
       const data = await response.json();
       console.log(data);
       if (response.status === 200) {
+        console.log({Appointments:data.appointments})
         setAppointments(data.appointments);
       } else {
         console.log(data.message);
@@ -131,8 +132,10 @@ const AdminAppointmentsDisplay: React.FC = () => {
   };
 
   useEffect(() => {
-    handleRefetch();
-  }, []);
+    if(currentUser){
+      handleRefetch();
+    }
+  }, [currentUser]);
 
   if (!appointments) {
     return (

@@ -156,7 +156,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
       async function handleAdd() {
         try {
           setLoading(true)
-          console.log("New Appointment", newAdmin);
+          console.log("New Admin", newAdmin);
           // Logic to add a new appointment
           const request = await fetch("/api/admins", {
             method: "POST",
@@ -359,23 +359,23 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                 </label>
               ) : (
                 <Avatar
-                  alt={`${updateUser.firstName} ${updateUser.lastName}'s profile`}
-                  src={updateUser.profileImage || "/default-avatar.png"}
-                  sx={{
-                    maxWidth: "200px",
-                    minWidth: "160px",
-                    marginTop: { xs: 0, sm: -33 },
-                    width: "auto", // Make the width 100%
-                    height: "auto",
-                    borderRadius: "10px", // Rounded edges
-                    cursor: "pointer",
-                  }}
-                />
+                alt={`${updateUser.firstName} ${updateUser.lastName}'s profile`}
+                src={updateUser.profileImage || updateUserDemo.profileImage}
+                sx={{
+                  maxWidth: "200px",
+                  minWidth: "200px",
+                  marginTop:"8px",
+                  width: "auto", // Make the width 100%
+                  height: "auto",
+                  borderRadius: "10px", // Rounded edges
+                  cursor: "pointer",
+                }}
+              />
               )}
             </div>
           </Box>
           <Box sx={{ marginTop: -2 }}>
-          <Typography variant="h4">
+          <Typography variant="h5">
               {isEditing ? (
                 <TextField
                     variant="outlined"
@@ -392,7 +392,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                     }
                   />
               ) : 
-              `${admin.admin.username || updateUserDemo.username}`}{" "}
+              `${admin.admin.username}`}{" "}
             </Typography>
             <Typography variant="subtitle1" component="div">
               {isEditing ? (
@@ -422,7 +422,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                   }
                 />
               ) : (
-                admin.user.lastName || updateUserDemo.lastName
+                admin.user.lastName
               )}
             </Typography>
             <Divider sx={{ my: 2 }} />
@@ -445,7 +445,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                 ) : (
                   <ListItemText
                     primary="Contact"
-                    secondary={admin.user.contactNumber || updateUserDemo.contactNumber}
+                    secondary={admin.user.contactNumber}
                   />
                 )}{" "}
               </ListItem>
@@ -464,7 +464,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                 ) : (
                   <ListItemText
                     primary="Gender"
-                    secondary={admin.user.gender || updateUserDemo.gender}
+                    secondary={admin.user.gender}
                   />
                 )}{" "}
               </ListItem>
@@ -524,7 +524,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                     }
                   />
                 ) : (
-                  <ListItemText primary="Email" secondary={admin.user.email || updateUserDemo.email} />
+                  <ListItemText primary="Email" secondary={admin.user.email} />
                 )}{" "}
               </ListItem>
             </List>
@@ -620,8 +620,6 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                   </TableCell>
                   <TableCell>
                     {admin.user.firstName +
-                      " " +
-                      admin.user.middleName +
                       " " +
                       admin.user.lastName}
                   </TableCell>

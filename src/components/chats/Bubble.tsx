@@ -61,7 +61,7 @@ const MessageBubble: React.FC<BubbleProps> = ({
           borderRadius: "4px",
         }}
       >
-        <Typography color={color} variant="body1" gutterBottom>
+        <Typography color={color} variant="body2" gutterBottom>
           {message}
         </Typography>
         <Typography color="grey" variant="caption">

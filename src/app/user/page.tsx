@@ -43,7 +43,7 @@ const updateUser = {
     role: "patient",
 };
 
-const UserProfile: React.FC<UserProfileProps> = () => {
+const UserProfile = () => {
 
     const theme  = useTheme()
     const [userProfile, setUserProfile] = useState<User | null>();

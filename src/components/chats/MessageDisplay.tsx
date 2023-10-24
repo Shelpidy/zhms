@@ -6,6 +6,7 @@ import {
   Avatar,
   Box,
   IconButton,
+  InputAdornment,
   TextField,
   Typography,
   useTheme,
@@ -102,7 +103,7 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ roomId, socket,room }) 
   },[socket,roomId,currentUser])
 
   const handleSendMessage = ()=>{
-    if(currentUser?.userId && room?.recipientId){
+    if(currentUser?.userId && room?.recipientId && messageInput){
       let msg:BubbleMessage = {
         senderId:currentUser.userId as string,
         roomId:roomId,
@@ -112,6 +113,7 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ roomId, socket,room }) 
 
       console.log({msg})
       socket.emit("msg",msg)
+      setMessageInput("")
     }
    
   }
@@ -156,26 +158,24 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ roomId, socket,room }) 
             src={room?.avatar}
             sx={{ width: 30, height: 30 }}
           />
-          <Typography variant="h6" color="primary.light">
+          <Typography variant="body1" color="primary.light">
             {room?.username}
           </Typography>
         </Box>
-        <Typography color="primary.light" variant="body1">
+        <Typography color="primary.light" variant="body2">
          {typing && <span>typing...</span> }  
         </Typography>
-        <Typography className="mx-5" color="primary.light" variant="body1">
+        <Typography className="mx-5" color="primary.light" variant="body2">
         {online && <span>online</span> } 
         </Typography>
       </Box>
       <Box
-        className="hide-scrollbar"
+        // className="hide-scrollbar"
         sx={{
-          display: "flex",
           minWidth: "50vw",
           width: "inherit",
-          flexDirection: "column",
-          height: "60vh",
-          overFlowY: "auto",
+          overFlowY: "scroll",
+
         }}
       >
         {messages.map((message) => {
@@ -192,18 +192,31 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ roomId, socket,room }) 
           marginTop: "8px",
         }}
       >
-        <Box>
+        <Box sx={{marginBottom:"10px"}}>
           <TextField
             onChange={(e)=>setMessageInput(e.target.value)}
-            variant="outlined"
+            variant="filled"
+            InputProps={{
+              style:{
+                borderRadius:'2%',
+                minWidth:"25vw",
+                borderBottom:"none"
+                
+              },
+              endAdornment:(<InputAdornment position="end">
+                 <IconButton onClick={handleSendMessage}>
+                  <SendOutlined />
+                </IconButton>
+              </InputAdornment>)
+            
+            }}
+            
             multiline
             size="small"
             placeholder="Type a message..."
           />
         </Box>
-        <IconButton onClick={handleSendMessage}>
-          <SendOutlined />
-        </IconButton>
+       
       </Box>
     </Box>
   );

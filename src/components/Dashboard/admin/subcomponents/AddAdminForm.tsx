@@ -10,16 +10,16 @@ const Toast = Swal.mixin({
   showConfirmButton: false,
 });
 
-const AddBloodGroup = () => {
+const AddAdminForm = () => {
 
-    const [bloodGroup, setBloodGroup] = useState("")
-    const [volume, setVolume] = useState(0)
+    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const handleClick = async() => {
         try{
-        let bloodGroupObj = {
-                groupName:bloodGroup,
-                volume}
-        let response = await fetch("/api/bloodgroup/",{method:"POST",body:JSON.stringify(bloodGroupObj),headers:{
+        let adminObj = {
+                email,username
+                }
+        let response = await fetch("/api/admins/",{method:"POST",body:JSON.stringify(adminObj),headers:{
             "Content-Type":"application/json"
         }})
         let data = await response.json()
@@ -38,9 +38,6 @@ const AddBloodGroup = () => {
               });
 
         }
-
-
-
         }catch(err){
             console.log(err)
         }
@@ -56,16 +53,16 @@ const AddBloodGroup = () => {
              <TextField
               size="small"
               sx={{width: "auto",marginBottom:2}}
-              label="Blood Group"
-              value={bloodGroup}
-              onChange={(e) => setBloodGroup(e.target.value)}
+              label="Email"
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
               
              />
               <TextField
               size="small"
               sx={{width: "auto"}}
-              label="Volume in litre"
-              onChange={(e) => setVolume(Number(e.target.value))}
+              label="Username"
+              onChange={(e) => setUsername(e.target.value)}
              />
              <Button 
              variant="contained" 
@@ -80,4 +77,4 @@ const AddBloodGroup = () => {
     )
 }
 
-export default AddBloodGroup;
+export default AddAdminForm;

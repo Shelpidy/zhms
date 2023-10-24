@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Paper,
@@ -17,13 +17,10 @@ interface Notification {
   timestamp: string;
 }
 
-interface NotificationScreenProps {
-  notifications: Notification[];
-}
 
-const NotificationScreen: React.FC<NotificationScreenProps> = ({
-  notifications,
-}) => {
+const NotificationScreen = () => {
+
+  const [notifications,setNotifications] = useState<Notification[]>([])
   return (
     <Container>
       <Paper elevation={3} style={{ minHeight: "500px", padding: "20px" }}>

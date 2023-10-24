@@ -82,19 +82,6 @@ const dummyUser = {
   role: "patient",
 };
 
-const dummyDoctor = {
-  specialization: {
-    specializationName: "bone scientist",
-  },
-  dummyUser,
-};
-const dummyPatient = {
-  bloodGroup: {
-    groupName: "O+",
-  },
-  diagnosis: "malarial",
-  dummyUser,
-};
 
 const style = {
   position: "fixed",
@@ -117,7 +104,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
   const [openUpdate, setOpenUpdate] = useState(false);
   const [expand, setExpand] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
-    useState<AppointmentDetail | null>(null);
+    useState<AppointmentDetail>(appointments[0]);
   const [selectedUpdateAppointment, setSelectedUpdateAppointment] =
     useState<AppointmentDetail | null>(null);
 
@@ -165,7 +152,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
   };
   const handleClose = () => {
     setOpen(false);
-    setSelectedAppointment(null);
+    // setSelectedAppointment(null);
   };
 
   const handleEdit = (appointment: AppointmentDetail) => {
@@ -474,7 +461,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
           New
         </Button>
       </Box>
-      <TableContainer>
+      <TableContainer component={Paper}>
         <Table sx={{ minWidth: "70vw" }}>
           <TableHead>
             <TableRow>
@@ -499,7 +486,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
               .map((appointment, index) => (
                 <TableRow key={index}>
                   <TableCell>
-                    <Avatar
+                    <Avatar 
                       sx={{ width: "25px", height: "25px" }}
                       alt={appointment.doctor.user.firstName}
                       src={appointment.doctor.user.profileImage}
@@ -521,8 +508,6 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                   </TableCell>
                   <TableCell>
                     {appointment.patient.user.firstName +
-                      " " +
-                      appointment.patient.user.middleName +
                       " " +
                       appointment.patient.user.lastName}
                   </TableCell>
@@ -631,13 +616,13 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                     />
                     </Box>
                     <div>
-                      <Typography variant="h6">
+                      <Typography variant="body1">
                         <strong>Doctor Name:</strong>{" "}
                         {selectedAppointment?.doctor.user.firstName}{" "}
                         {selectedAppointment?.doctor.user.middleName}{" "}
                         {selectedAppointment?.doctor.user.lastName}
                       </Typography>
-                      <Typography variant="h6">
+                      <Typography variant="body1">
                         <strong>Specialization:</strong>{" "}
                         {
                           selectedAppointment?.doctor.specialization
@@ -670,7 +655,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                 <div>
                    <Box sx={{display:"flex",flexDirection:"row",justifyContent:"space-between",alignItems:"center",padding:"5px",marginY:'5px'}}>
                       <Typography variant="h5">Send Email</Typography>
-                      <Button sx={{marginTop: 1}} variant="contained" color="primary" size="small"><Link href={`/message/${selectedAppointment?.doctor.roomId}`}><Chat/></Link></Button>
+                      <Button sx={{marginTop: 1}} variant="contained" color="primary" size="small"><Link href={`/message/${selectedAppointment.doctor.roomId}`}><Chat/></Link></Button>
                    </Box>
                   <div className="grid mb-4 grid-cols-1 md:grid-cols-2 gap-4">
                     <TextField 
@@ -747,7 +732,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                     </Box>
 
                     <div>
-                      <Typography variant="h6">
+                      <Typography variant="body1">
                         <strong>Patient Name:</strong>{" "}
                         {selectedAppointment?.patient.user.firstName}{" "}
                         {selectedAppointment?.patient.user.middleName}{" "}

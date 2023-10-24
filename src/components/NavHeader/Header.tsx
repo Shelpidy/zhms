@@ -60,7 +60,7 @@ function Header({ setThemeMode }: HeaderProps) {
 
   return (
     <AppBar
-      variant="outlined"
+      elevation={0}
       position="fixed"
       sx={{ background: theme.palette.primary.main }}
     >

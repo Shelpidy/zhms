@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { AddAppointments, AddPatient } from "@/app/actions";
 import {
   FormControl,
   InputLabel,
@@ -61,7 +60,6 @@ const EditAppointmentForm: React.FC = () => {
   };
 
   async function handleAddAppointment(): Promise<void> {
-    await AddAppointments(appointmentData);
     console.log("Patient Data:", appointmentData);
   }
   return (

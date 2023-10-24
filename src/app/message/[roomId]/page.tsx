@@ -130,6 +130,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({params}) => {
       <Box className="w-full sticky top-[10vh] mx5 md:w-[30vw]">
         <List sx={{ width: "100%", bgcolor: "background.paper" }}>
           {rooms.map((room) => {
+            if(room.lastMessage)
             return (
               <MessageRoom
                 handleClick={() => {
@@ -144,7 +145,10 @@ const ChatScreen: React.FC<ChatScreenProps> = ({params}) => {
         </List>
       </Box>
       {activeRoom && socket && (
-        <MessageDisplay socket={socket} roomId={activeRoom} room={room} />
+        <Box sx={{marginBottom:"20px"}}>
+           <MessageDisplay socket={socket} roomId={activeRoom} room={room} />
+        </Box>
+
       )}
       {!activeRoom && (
         <Box marginTop={10} sx={{width:"100%",textAlign:'center'}}>

@@ -17,6 +17,8 @@ type RouteParams = {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     let adminUserId = params.userId;
+
+    console.log({AminUserId:adminUserId})
     const appointments = await Appointment.findAll();
 
     const appointmentsWithDetails = await Promise.all(
@@ -107,7 +109,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
         return {
           doctor: {
-            doctorId: doctor?.doctorId,
+            doctor,
             specialization,
             user: doctorUser,
             roomId: doctorRoom?.getDataValue("roomId"),
