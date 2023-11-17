@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       userId,
     });
     // updating the role
-    await User.update({role: "admin"}, {where: { userId }});
+    await User.update({ role: "admin" }, { where: { userId } });
 
     return new Response(
       JSON.stringify({ message: "new Admin created", singleAdmin }),

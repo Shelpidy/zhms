@@ -41,7 +41,7 @@ const MessageRoom: React.FC<RoomProps> = ({
             <React.Fragment>
               {lastMessage}
               <Typography
-                sx={{ display: "inline",marginLeft:'10px' }}
+                sx={{ display: "inline", marginLeft: "10px" }}
                 component="span"
                 variant="body2"
                 color="text.primary"

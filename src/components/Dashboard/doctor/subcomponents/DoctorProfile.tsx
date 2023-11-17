@@ -102,7 +102,7 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
       doctorEmail: doctorprofile?.user?.email,
       specialization: doctorprofile?.specialization?.specializationName,
       doctorId: doctorprofile?.doctor?.doctorId,
-    })
+    });
     setUpdateUser({
       userId: doctorprofile.user?.userId,
       firstName: doctorprofile.user?.firstName,
@@ -121,49 +121,46 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
     // Logic to update the appointment
     console.log(updateUser, updateDoctor);
     try {
-      setLoading(true)
-      const request1 = await fetch (`/api/doctors/${userId}`, {
+      setLoading(true);
+      const request1 = await fetch(`/api/doctors/${userId}`, {
         method: "PUT",
         body: JSON.stringify(updateDoctor),
-        headers: {"Content-Type": "application/json"}
-      })
-      const request2 = await fetch (`/api/users/${userId}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      const request2 = await fetch(`/api/users/${userId}`, {
         method: "PUT",
         body: JSON.stringify(updateUser),
-        headers: {"Content-Type": "application/json"}
-      })
-      const [response1, response2] = await Promise.all([request1, request2])
+        headers: { "Content-Type": "application/json" },
+      });
+      const [response1, response2] = await Promise.all([request1, request2]);
 
-      const data1 = await response1.json()
-      const data2 = await response2.json()
+      const data1 = await response1.json();
+      const data2 = await response2.json();
 
       if (response1.status === 202 && response2.status === 202) {
         Toast.fire({
           icon: "success",
           iconColor: "green",
           text: `${data1?.message} ${data2?.message}`,
-        })
-      }
-      else{
+        });
+      } else {
         Toast.fire({
           icon: "error",
           iconColor: "red",
           text: `${data1?.message} ${data2?.message}`,
-        })
+        });
       }
-    
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error.message);
       Toast.fire({
         icon: "error",
         iconColor: "red",
         text: "An error occurred while updating.",
       });
-      
-    }finally{
-        setLoading(false)
-        onRefetch()
-        setIsEditing(false);
+    } finally {
+      setLoading(false);
+      onRefetch();
+      setIsEditing(false);
     }
     // Update the appointments state after updating
   }
@@ -176,8 +173,7 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
   };
 
   return (
-    <Box>
-      <Paper elevation={3} className="p-4">
+    <Box className="p-4">
         <Box
           sx={{
             display: "flex",
@@ -233,13 +229,13 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
             </div>
           </Box>
           <Box sx={{ marginTop: -2 }}>
-            <Typography variant="h4" component="div">
+            <Typography variant="h5" fontFamily='Poppins-Medium'>
               {isEditing ? (
                 <TextField
                   name="firstName"
                   variant="outlined"
                   label="First Name"
-                  sx={{marginLeft: 2,}}
+                  sx={{ marginLeft: 2 }}
                   size="small"
                   value={updateUser.firstName}
                   onChange={(e) =>
@@ -255,7 +251,10 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
                   name="lastName"
                   label="Last Name"
                   size="small"
-                  sx={{ marginTop: { xs: 1, sm: 1, md: 0, lg: 0 }, marginLeft: {xs:2} }}
+                  sx={{
+                    marginTop: { xs: 1, sm: 1, md: 0, lg: 0 },
+                    marginLeft: { xs: 2 },
+                  }}
                   value={updateUser.lastName}
                   onChange={(e) =>
                     setUpdateUser({ ...updateUser, lastName: e.target.value })
@@ -268,21 +267,22 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
             <Typography variant="subtitle1">
               {isEditing ? (
                 <TextField
-                    variant="outlined"
-                    name="specialization"
-                    label="Specialization"
-                    sx={{marginTop: 2, marginLeft: 2,}}
-                    size="small"
-                    value={updateDoctor.specialization}
-                    onChange={(e) =>
-                      setUpdateDoctor({
-                        ...updateDoctor,
-                        specialization: e.target.value,
-                      })
-                    }
-                  />
-              ) 
-              : `${doctor?.specialization?.specializationName}`}{" "}
+                  variant="outlined"
+                  name="specialization"
+                  label="Specialization"
+                  sx={{ marginTop: 2, marginLeft: 2 }}
+                  size="small"
+                  value={updateDoctor.specialization}
+                  onChange={(e) =>
+                    setUpdateDoctor({
+                      ...updateDoctor,
+                      specialization: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                `${doctor?.specialization?.specializationName}`
+              )}{" "}
             </Typography>
             <Divider sx={{ my: 2 }} />
             <List>
@@ -383,14 +383,17 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
                     }
                   />
                 ) : (
-                  <ListItemText primary="Email" secondary={doctor?.user?.email} />
+                  <ListItemText
+                    primary="Email"
+                    secondary={doctor?.user?.email}
+                  />
                 )}{" "}
               </ListItem>
             </List>
             <Box sx={{ display: "flex", justifyContent: "flex-start", mt: 2 }}>
               {isEditing ? (
                 <LoadingButton
-                  size="large"
+                  size="small"
                   variant="contained"
                   loading={loading}
                   disabled={loading}
@@ -402,7 +405,7 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
                 </LoadingButton>
               ) : (
                 <Button
-                  size="large"
+                  size="small"
                   variant="contained"
                   color="primary"
                   onClick={() => handleEdit(doctor)}
@@ -413,7 +416,6 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
             </Box>
           </Box>
         </Box>
-      </Paper>
     </Box>
   );
 };

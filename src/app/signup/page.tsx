@@ -13,6 +13,8 @@ import {
   Divider,
   Card,
   useTheme,
+  IconButton,
+  CardMedia,
 } from "@mui/material";
 
 import Link from "next/link";
@@ -21,6 +23,49 @@ import { useRouter } from "next/navigation";
 import ZHLogo from "@/components/Logo/Logo";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
+import { AddAPhotoOutlined } from "@mui/icons-material";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+interface AudioUpload {
+  blob: Blob;
+  userId: string;
+  folderName: string;
+}
+
+const generateRandomFilename = (userId: string): string => {
+  const timestamp = new Date().getTime();
+  const uniqueIdentifier = Math.random().toString(36).substring(2);
+  return `${timestamp}_${uniqueIdentifier}`;
+};
+
+const uploadFileToFirebase = async ({
+  blob,
+  userId,
+  folderName,
+}: AudioUpload): Promise<string> => {
+  const storage = getStorage(); // Initialize Firebase Storage
+
+  const filename = generateRandomFilename(userId);
+
+  // Create a reference to the storage location
+  const storageRef = ref(storage, `${folderName}/${filename}`);
+  try {
+    // Upload the blob to Firebase Storage
+    await uploadBytes(storageRef, blob);
+
+    // Get the download URL of the uploaded file
+    const downloadURL = await getDownloadURL(storageRef);
+
+    console.log("File uploaded successfully. Download URL:", downloadURL);
+
+    return downloadURL; // Return the download URL for further use
+  } catch (error) {
+    console.error("Error uploading file to Firebase Storage:", error);
+    throw error; // Rethrow the error for handling at a higher level
+  }
+};
+
+
 const Toast = Swal.mixin({
   toast: true,
   position: "center",
@@ -34,7 +79,7 @@ export const metadata = {
   description: "Digital Learning Platform",
 };
 
-const SignUpPage: React.FC = () => {
+const SignUpPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -44,7 +89,8 @@ const SignUpPage: React.FC = () => {
     firstName: "",
     lastName: "",
     middleName: "",
-    profileImage: "",
+    profileImage:
+      "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg?w=740",
     gender: "",
     contactNumber: "",
   });
@@ -54,8 +100,8 @@ const SignUpPage: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [emailVerification, setEmailVerification] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
-  const theme = useTheme();
+  const [image, setImage] = useState<string | null>(null);
+
 
   const { ...dataWithoutRole } = formData;
   const isSubmitButtonDisabled = Object.values(dataWithoutRole).some(
@@ -72,16 +118,37 @@ const SignUpPage: React.FC = () => {
     }));
   };
 
+  const handleProfileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let imageFiles = e.target.files;
+    if (imageFiles) {
+      let urlImage = URL.createObjectURL(imageFiles[0]);
+      setFormData((prevData: any) => ({
+        ...prevData,
+        profileImage: urlImage,
+      }));
+      setImage(urlImage);
+
+      console.log({ ProfileImage: urlImage });
+    }
+  };
+
   async function handleFormSubmit(): Promise<void> {
     setLoading(true);
     const { confirmPassword, ...userData } = formData;
-    console.log({ userData });
+    let response = await fetch(formData.profileImage);
+    let blob = await response.blob();
+    let profileImage = await uploadFileToFirebase({
+      blob,
+      folderName: "ProfileImages",
+      userId: formData.email,
+    });
+    console.log({ ...userData, profileImage });
     try {
-      let roles = ["admin", "user", "doctor", "patient"];
-      let index = Math.round(Math.random() * 10) % 3;
+      // let roles = ["admin", "user", "doctor", "patient"];
+      // let index = Math.round(Math.random() * 10) % 3;
       const response = await fetch("/api/auth/signup/", {
         method: "POST",
-        body: JSON.stringify({ ...userData, role:"user"}),
+        body: JSON.stringify({ ...userData, profileImage, role: "user" }),
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
@@ -172,6 +239,59 @@ const SignUpPage: React.FC = () => {
       }}
     >
       <Card sx={{ padding: "25px", maxWidth: "800px", marginBottom: "15px" }}>
+        <Card
+          className="hide-scrollbar"
+          variant="outlined"
+          sx={{ width: "100%" }}
+        >
+          <Box>
+            {image && (
+              <Box
+                key={image}
+                sx={{
+                  position: "relative",
+                  width: "100%",
+                  aspectRatio: "1",
+                  marginTop: "5px",
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  height="100"
+                  image={image}
+                  alt="Profile Image"
+                />
+              </Box>
+            )}
+            <label
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "20vh",
+                width: "100%",
+              }}
+              htmlFor="avatar-input"
+            >
+              <input
+                id="avatar-input"
+                type="file"
+                multiple
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleProfileImage}
+              />
+
+              <IconButton color="primary" component="span">
+                <AddAPhotoOutlined />
+              </IconButton>
+              <Typography variant="caption">
+                Click here to upload profile image
+              </Typography>
+            </label>
+          </Box>
+        </Card>
         <Box
           sx={{
             display: "flex",
@@ -180,7 +300,7 @@ const SignUpPage: React.FC = () => {
           }}
           mb="10px"
         >
-             <ZHLogo fill="#f49d37" width={56} height={41} />
+          <ZHLogo fill="#f49d37" width={56} height={41} />
         </Box>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6} sx={{ marginTop: 3 }}>
@@ -294,7 +414,7 @@ const SignUpPage: React.FC = () => {
               ) : null}
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ marginTop: 2 }}>
+          {/* <Grid item xs={12} sm={6} sx={{ marginTop: 2 }}>
             <TextField
               required
               size="small"
@@ -306,7 +426,7 @@ const SignUpPage: React.FC = () => {
               value={formData.profileImage}
               onChange={handleInputChange}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6} sx={{ marginTop: 2 }}>
             <TextField
               required

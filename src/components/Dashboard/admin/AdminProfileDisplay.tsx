@@ -17,7 +17,7 @@ const AdminProfileDisplay: React.FC = () => {
 
   const handleRefetch = async () => {
     try {
-      console.log(currentUser)
+      console.log(currentUser);
       /* Fetch the single admin by userId instead.. use the currentUser 
       object to get userId, Do the same for all profile  {userId,role,profilePicture,displayName} */
       const response = await fetch(`/api/admins/${currentUser?.userId}`);
@@ -33,8 +33,10 @@ const AdminProfileDisplay: React.FC = () => {
     }
   };
   useEffect(() => {
-    handleRefetch();
-  }, []);
+    if(currentUser){
+         handleRefetch();
+    }
+  }, [currentUser]);
 
   const handleRefetchProfiles = async () => {
     try {
@@ -56,7 +58,7 @@ const AdminProfileDisplay: React.FC = () => {
   };
   useEffect(() => {
     handleRefetchProfiles();
-  }, [])
+  }, []);
 
   if (!adminProfile || !adminProfiles) {
     return (
@@ -78,12 +80,17 @@ const AdminProfileDisplay: React.FC = () => {
       </Box>
     );
   }
-  
+
   return (
     <Box>
-      <AdminProfileDetails admins={adminProfiles} onRefetchAdmins={handleRefetchProfiles} admin={adminProfile} onRefetch={handleRefetch} />
+      <AdminProfileDetails
+        admins={adminProfiles}
+        onRefetchAdmins={handleRefetchProfiles}
+        admin={adminProfile}
+        onRefetch={handleRefetch}
+      />
     </Box>
-  )
+  );
 };
 
 export default AdminProfileDisplay;

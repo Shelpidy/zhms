@@ -34,17 +34,19 @@ export async function POST(req: NextRequest) {
   try {
     const data: Record<string, any> = await req.json();
 
-    const bloodGrp = await BloodGroup.findOne({where:{
-      groupName: data.bloodGroupName,
-    }});
-     const  { bloodGroupId }  = bloodGrp?.dataValues;
-  
+    const bloodGrp = await BloodGroup.findOne({
+      where: {
+        groupName: data.bloodGroupName,
+      },
+    });
+    const { bloodGroupId } = bloodGrp?.dataValues;
+
     const donor = await Donor.create({
       ...data,
       bloodGroupId,
     });
-   
-    await bloodGrp?.increment("volume",{by:Number(data.volume)})
+
+    await bloodGrp?.increment("volume", { by: Number(data.volume) });
 
     return new NextResponse(
       JSON.stringify({ message: "Donor created successfully", donor }),

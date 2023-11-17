@@ -151,7 +151,7 @@ const AdminUsersTable: React.FC<AdminUserTableProps> = ({ users }) => {
         <Dialog
           open={expand}
           onClose={() => setExpand(false)}
-          sx={{ maxWidth: "lg", minWidth: "400px",padding:"5px" }}
+          sx={{ maxWidth: "lg", minWidth: "400px", padding: "5px" }}
         >
           <Box sx={style}>
             <Box

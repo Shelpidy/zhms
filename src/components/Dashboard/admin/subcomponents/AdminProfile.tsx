@@ -28,7 +28,14 @@ import {
   IconButton,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { PhotoCamera, Edit, SaveAlt, Search, Add,Delete, } from "@mui/icons-material";
+import {
+  PhotoCamera,
+  Edit,
+  SaveAlt,
+  Search,
+  Add,
+  Delete,
+} from "@mui/icons-material";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import moment from "moment";
@@ -36,263 +43,257 @@ import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import CloseIcon from "@mui/icons-material/Close";
 
 type AdminProfile = {
-    admin: Admin;
-    user: User;
+  admin: Admin;
+  user: User;
 };
 
 interface AdminProfileProps {
-    admin: AdminProfile;
-    admins: AdminProfile[];
-    onRefetch: () => void;
-    onRefetchAdmins: () => void;
+  admin: AdminProfile;
+  admins: AdminProfile[];
+  onRefetch: () => void;
+  onRefetchAdmins: () => void;
 }
 
 const updateUserDemo = {
-    address: "123 Main Street",
-    contactNumber: "1234567890",
-    dateOfBirth: "31st August, 2023",
-    email: "kamaradennis36@gmail.com",
-    specialization: "bone specialist",
-    firstName: "Dennis",
-    username: "denno1000",
-    gender: "male",
-    lastName: "Kamara",
-    profileImage:
-      null ||
-      "https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-    role: "patient",
+  address: "123 Main Street",
+  contactNumber: "1234567890",
+  dateOfBirth: "31st August, 2023",
+  email: "kamaradennis36@gmail.com",
+  specialization: "bone specialist",
+  firstName: "Dennis",
+  username: "denno1000",
+  gender: "male",
+  lastName: "Kamara",
+  profileImage:
+    null ||
+    "https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
+  role: "patient",
 };
 
 const style = {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "80%",
-    maxWidth: "500px",
-    maxHeight: "88vh",
-    p: 4,
-    overflow: "auto",
-  };
+  position: "fixed",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "80%",
+  maxWidth: "500px",
+  maxHeight: "88vh",
+  p: 4,
+  overflow: "auto",
+};
 
 const AdminProfileDetails: React.FC<AdminProfileProps> = ({
-    admin,
-    admins,
-    onRefetchAdmins,
-    onRefetch,
-}) => { 
+  admin,
+  admins,
+  onRefetchAdmins,
+  onRefetch,
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedData, setEditedData] = useState({});
+  const [open, setOpen] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [expand, setExpand] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState<AdminProfile | null>(null);
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedData, setEditedData] = useState({});
-    const [open, setOpen] = useState(false);
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const [expand, setExpand] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [selectedAdmin, setSelectedAdmin] = useState<AdminProfile | null>(
-        null,
-      );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [newAdmin, setNewAdmin] = useState<{
+    username: string;
+    email: string;
+  }>({
+    username: "",
+    email: "",
+  });
 
-    const [searchQuery, setSearchQuery] = useState("");
-    const [newAdmin, setNewAdmin] = useState<{
-        username: string,
-        email: string,
-      }>({
-        username: "",
-        email: "",
+  const [updateAdmin, setUpdateAdmin] = useState<{
+    username: string;
+    email: string;
+  }>({
+    username: "",
+    email: "",
+  });
+
+  const [updateUser, setUpdateUser] = useState<{
+    userId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    address: string;
+    gender: string;
+    contactNumber: string;
+    dateOfBirth: string;
+    profileImage: string;
+  }>({
+    userId: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    address: "",
+    gender: "",
+    contactNumber: "",
+    dateOfBirth: "",
+    profileImage: "",
+  });
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "center",
+    timer: 3000,
+    timerProgressBar: true,
+    showConfirmButton: false,
+  });
+
+  const handleExpand = (admin: AdminProfile) => {
+    console.log(admin);
+    setSelectedAdmin(admin);
+    setExpand(true);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedAdmin(null);
+  };
+
+  async function handleAdd() {
+    try {
+      setLoading(true);
+      console.log("New Admin", newAdmin);
+      // Logic to add a new appointment
+      const request = await fetch("/api/admins", {
+        method: "POST",
+        body: JSON.stringify(newAdmin),
+        headers: { "Content-Type": "application/json" },
       });
-
-    const [updateAdmin, setUpdateAdmin] = useState<{
-      username: string,
-      email: string,
-    }>({
-      username: "",
-      email: "",
-    });
-  
-    const [updateUser, setUpdateUser] = useState<{
-      userId: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      address: string;
-      gender: string;
-      contactNumber: string;
-      dateOfBirth: string;
-      profileImage: string;
-    }>({
-      userId: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      address: "",
-      gender: "",
-      contactNumber: "",
-      dateOfBirth: "",
-      profileImage: "",
-    });
-  
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "center",
-      timer: 3000,
-      timerProgressBar: true,
-      showConfirmButton: false,
-    });
-
-    const handleExpand = (admin: AdminProfile) => {
-        console.log(admin);
-        setSelectedAdmin(admin);
-        setExpand(true);
-      };
-      const handleOpen = () => {
-        setOpen(true);
-      };
-    
-      const handleClose = () => {
-        setOpen(false);
-        setSelectedAdmin(null);
-      };
-
-      async function handleAdd() {
-        try {
-          setLoading(true)
-          console.log("New Admin", newAdmin);
-          // Logic to add a new appointment
-          const request = await fetch("/api/admins", {
-            method: "POST",
-            body: JSON.stringify(newAdmin),
-            headers: { "Content-Type": "application/json" },
-          });
-          const data = await request.json();
-          if (request.status === 201) {
-            console.log(JSON.stringify(data));
-            Toast.fire({
-              icon: "success",
-              iconColor: "green",
-              text: data?.message,
-            });
-          } else {
-            Toast.fire({
-              icon: "error",
-              iconColor: "red",
-              text: data?.message,
-            });
-          }
-          setLoading(false)
-          onRefetchAdmins();
-        } catch (error) {
-          console.log(error);
-          setLoading(false)
-        }
-        // Update the appointments state after adding
-        handleClose();
-        newAdmin.email = "";
-        newAdmin.username = "";
-      }
-      async function handleDelete(adminId: string) {
-        console.log(adminId);
-        try {
-          setLoading(true)
-          // Logic to delete the appointment
-          console.log(adminId);
-          const request = await fetch(`/api/admins/${adminId}`, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-          });
-          const data = await request.json();
-          if (request.status === 203) {
-            Toast.fire({
-              icon: "success",
-              iconColor: "green",
-              text: data?.message,
-            });
-          } else {
-            Toast.fire({
-              icon: "error",
-              iconColor: "red",
-              text: data?.message,
-            });
-          }
-          setLoading(false)
-          onRefetch();
-          // Update the appointments state after deletion
-        } catch (error) {
-          console.log(error);
-          setLoading(false)
-        }
-      }
-      const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setNewAdmin((prevAdmin) => ({
-          ...prevAdmin,
-          [name]: value,
-        }));
-      };
-
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value);
-    }; 
-
-    const handleEdit = (adminprofile: AdminProfile) => {
-        console.log(adminprofile);
-        setIsEditing(true);
-        // Initialize editedData with the current Admin data
-        setEditedData(updateUser);
-        setUpdateAdmin({
-            email: adminprofile?.user?.email,
-            username: adminprofile?.admin?.username,
-        })
-        setUpdateUser({
-          userId: adminprofile?.user?.userId,
-          firstName: adminprofile.user?.firstName,
-          lastName: adminprofile.user?.lastName,
-          email: adminprofile.user?.email,
-          address: adminprofile.user?.address || "",
-          gender: adminprofile.user?.gender,
-          contactNumber: adminprofile.user?.contactNumber,
-          dateOfBirth: adminprofile.user?.dateOfBirth || "",
-          profileImage: adminprofile.user?.profileImage || "",
+      const data = await request.json();
+      if (request.status === 201) {
+        console.log(JSON.stringify(data));
+        Toast.fire({
+          icon: "success",
+          iconColor: "green",
+          text: data?.message,
         });
-      };
+      } else {
+        Toast.fire({
+          icon: "error",
+          iconColor: "red",
+          text: data?.message,
+        });
+      }
+      setLoading(false);
+      onRefetchAdmins();
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+    // Update the appointments state after adding
+    handleClose();
+    newAdmin.email = "";
+    newAdmin.username = "";
+  }
+  async function handleDelete(adminId: string) {
+    console.log(adminId);
+    try {
+      setLoading(true);
+      // Logic to delete the appointment
+      console.log(adminId);
+      const request = await fetch(`/api/admins/${adminId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await request.json();
+      if (request.status === 203) {
+        Toast.fire({
+          icon: "success",
+          iconColor: "green",
+          text: data?.message,
+        });
+      } else {
+        Toast.fire({
+          icon: "error",
+          iconColor: "red",
+          text: data?.message,
+        });
+      }
+      setLoading(false);
+      onRefetch();
+      // Update the appointments state after deletion
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setNewAdmin((prevAdmin) => ({
+      ...prevAdmin,
+      [name]: value,
+    }));
+  };
 
-        ///// performs the put request//////
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleEdit = (adminprofile: AdminProfile) => {
+    console.log(adminprofile);
+    setIsEditing(true);
+    // Initialize editedData with the current Admin data
+    setEditedData(updateUser);
+    setUpdateAdmin({
+      email: adminprofile?.user?.email,
+      username: adminprofile?.admin?.username,
+    });
+    setUpdateUser({
+      userId: adminprofile?.user?.userId,
+      firstName: adminprofile.user?.firstName,
+      lastName: adminprofile.user?.lastName,
+      email: adminprofile.user?.email,
+      address: adminprofile.user?.address || "",
+      gender: adminprofile.user?.gender,
+      contactNumber: adminprofile.user?.contactNumber,
+      dateOfBirth: adminprofile.user?.dateOfBirth || "",
+      profileImage: adminprofile.user?.profileImage || "",
+    });
+  };
+
+  ///// performs the put request//////
   async function handleUpdate(adminId: string, userId: string) {
     // Logic to update the appointment
     console.log(updateUser, updateAdmin);
-    
-    
+
     try {
-        setLoading(true)
-      const request1 = await fetch (`/api/admins/${adminId}`, {
+      setLoading(true);
+      const request1 = await fetch(`/api/admins/${adminId}`, {
         method: "PUT",
         body: JSON.stringify(updateAdmin),
-        headers: {"Content-Type": "application/json"}
-      })
-      const request2 = await fetch (`/api/users/${userId}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      const request2 = await fetch(`/api/users/${userId}`, {
         method: "PUT",
         body: JSON.stringify(updateUser),
-        headers: {"Content-Type": "application/json"}
-      })
-      const [response1, response2] = await Promise.all([request1, request2])
+        headers: { "Content-Type": "application/json" },
+      });
+      const [response1, response2] = await Promise.all([request1, request2]);
 
-      const data1 = await response1.json()
-      const data2 = await response2.json()
+      const data1 = await response1.json();
+      const data2 = await response2.json();
 
       if (response1.status === 202 && response2.status === 202) {
         Toast.fire({
           icon: "success",
           iconColor: "green",
           text: `${data1?.message} ${data2?.message}`,
-        })
-      }
-      else{
+        });
+      } else {
         Toast.fire({
           icon: "error",
           iconColor: "red",
           text: `${data1?.message} ${data2?.message}`,
-        })
+        });
       }
-     
     } catch (error) {
       console.log(error);
       Toast.fire({
@@ -300,11 +301,10 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
         iconColor: "red",
         text: "An error occurred while updating.",
       });
-      
-    }finally{
-        setLoading(false)
-        onRefetch()
-        setIsEditing(false);
+    } finally {
+      setLoading(false);
+      onRefetch();
+      setIsEditing(false);
     }
     // Update the appointments state after updating
   }
@@ -315,9 +315,8 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
     //   setUpdateUser({...updateUser, pictureImage:"file"});
     // }
   };
-    return (
-    <Box>
-      <Paper elevation={3} className="p-4">
+  return (
+    <Box className="p-4">
         <Box
           sx={{
             display: "flex",
@@ -359,40 +358,41 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                 </label>
               ) : (
                 <Avatar
-                alt={`${updateUser.firstName} ${updateUser.lastName}'s profile`}
-                src={updateUser.profileImage || updateUserDemo.profileImage}
-                sx={{
-                  maxWidth: "200px",
-                  minWidth: "200px",
-                  marginTop:"8px",
-                  width: "auto", // Make the width 100%
-                  height: "auto",
-                  borderRadius: "10px", // Rounded edges
-                  cursor: "pointer",
-                }}
-              />
+                  alt={`${updateUser.firstName} ${updateUser.lastName}'s profile`}
+                  src={updateUser.profileImage || updateUserDemo.profileImage}
+                  sx={{
+                    maxWidth: "200px",
+                    minWidth: "200px",
+                    marginTop: "8px",
+                    width: "auto", // Make the width 100%
+                    height: "auto",
+                    borderRadius: "10px", // Rounded edges
+                    cursor: "pointer",
+                  }}
+                />
               )}
             </div>
           </Box>
           <Box sx={{ marginTop: -2 }}>
-          <Typography variant="h5">
+          <Typography variant="h5" fontFamily='Poppins-Medium'>
               {isEditing ? (
                 <TextField
-                    variant="outlined"
-                    name="username"
-                    label="User Name"
-                    sx={{marginBottom: 2}}
-                    size="small"
-                    value={updateAdmin.username}
-                    onChange={(e) =>
-                        setUpdateAdmin({
-                        ...updateAdmin,
-                        username: e.target.value,
-                        })
-                    }
-                  />
-              ) : 
-              `${admin.admin.username}`}{" "}
+                  variant="outlined"
+                  name="username"
+                  label="User Name"
+                  sx={{ marginBottom: 2 }}
+                  size="small"
+                  value={updateAdmin.username}
+                  onChange={(e) =>
+                    setUpdateAdmin({
+                      ...updateAdmin,
+                      username: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                `${admin.admin.username}`
+              )}{" "}
             </Typography>
             <Typography variant="subtitle1" component="div">
               {isEditing ? (
@@ -407,7 +407,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                   }
                 />
               ) : (
-                `${admin.user.firstName || updateUserDemo.firstName}`
+                `${admin.user.firstName}`
               )}{" "}
               {isEditing ? (
                 <TextField
@@ -487,7 +487,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                   <ListItemText
                     primary="Date of Birth"
                     secondary={new Date(
-                        admin.user.dateOfBirth || updateUserDemo.dateOfBirth,
+                      admin.user.dateOfBirth || updateUserDemo.dateOfBirth,
                     ).toLocaleDateString()}
                   />
                 )}{" "}
@@ -531,19 +531,21 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
             <Box sx={{ display: "flex", justifyContent: "flex-start", mt: 2 }}>
               {isEditing ? (
                 <LoadingButton
-                  size="large"
+                  size="small"
                   loading={loading}
                   disabled={loading}
                   variant="contained"
                   color="primary"
-                  onClick={() => handleUpdate(admin.admin.adminId, admin.user.userId)}
+                  onClick={() =>
+                    handleUpdate(admin.admin.adminId, admin.user.userId)
+                  }
                 >
                   <SaveAlt />
                   <span style={{ marginLeft: 5 }}>Save</span>
                 </LoadingButton>
               ) : (
                 <Button
-                  size="large"
+                  size="small"
                   variant="contained"
                   color="primary"
                   onClick={() => handleEdit(admin)}
@@ -554,8 +556,6 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
             </Box>
           </Box>
         </Box>
-      </Paper>
-
       <Box
         sx={{
           display: "flex",
@@ -605,9 +605,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
               .filter(
                 (admin) =>
                   admin.user.email.includes(searchQuery) ||
-                  admin.admin.username.includes(
-                    searchQuery,
-                  ),
+                  admin.admin.username.includes(searchQuery),
               )
               .map((admin, index) => (
                 <TableRow key={index}>
@@ -619,13 +617,9 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                     />
                   </TableCell>
                   <TableCell>
-                    {admin.user.firstName +
-                      " " +
-                      admin.user.lastName}
+                    {admin.user.firstName + " " + admin.user.lastName}
                   </TableCell>
-                  <TableCell>
-                    {admin?.admin.username}
-                  </TableCell>
+                  <TableCell>{admin?.admin.username}</TableCell>
                   <TableCell>
                     {moment(admin.admin.createdAt).fromNow()}
                   </TableCell>
@@ -633,8 +627,8 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                     <IconButton onClick={() => handleExpand(admin)}>
                       <ExpandCircleDownIcon />
                     </IconButton>
-                    <IconButton 
-                    onClick={() => handleDelete(admin.admin.adminId)} 
+                    <IconButton
+                      onClick={() => handleDelete(admin.admin.adminId)}
                     >
                       <Delete />
                     </IconButton>
@@ -643,11 +637,8 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
               ))}
           </TableBody>
         </Table>
-        <Dialog
-          open={expand}
-          onClose={() => setExpand(false)}
-        >
-          <Box >
+        <Dialog open={expand} onClose={() => setExpand(false)}>
+          <Box>
             <Box
               sx={{
                 display: "flex",
@@ -671,43 +662,50 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                   marginTop: 2,
                 }}
               >
-                <DialogContent sx={{minWidth: "500px"}}>
-                <Box sx={{display: "flex", justifyContent: "center", alignContent: "center", marginTop: -2, marginBottom: 2}}>
+                <DialogContent sx={{ minWidth: "500px" }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignContent: "center",
+                      marginTop: -2,
+                      marginBottom: 2,
+                    }}
+                  >
                     <Avatar
-                    alt={selectedAdmin?.user.firstName}
-                    sx={{ width: "150px", height: "150px",}}
-                    src={selectedAdmin?.user.profileImage}
+                      alt={selectedAdmin?.user.firstName}
+                      sx={{ width: "150px", height: "150px" }}
+                      src={selectedAdmin?.user.profileImage}
                     />
-                </Box>
-                <div>
-                  <Typography variant="h6">
-                    <strong>Admin Name:</strong>{" "}
-                    {selectedAdmin?.user.firstName}{" "}
-                    {selectedAdmin?.user.middleName}{" "}
-                    {selectedAdmin?.user.lastName}
-                  </Typography>
-                  <Typography variant="h6">
-                    <strong>Username:</strong>{" "}
-                    {selectedAdmin?.admin.username}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Email:</strong> {selectedAdmin?.user?.email}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Contact Number:</strong>{" "}
-                    {selectedAdmin?.user?.contactNumber}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Gender:</strong> {selectedAdmin?.user?.gender}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Address:</strong> {selectedAdmin?.user?.address}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Birth Date:</strong>{" "}
-                    {selectedAdmin?.user?.dateOfBirth?.toString()}
-                  </Typography>
-                </div>
+                  </Box>
+                  <div>
+                    <Typography variant="h6">
+                      <strong>Admin Name:</strong>{" "}
+                      {selectedAdmin?.user.firstName}{" "}
+                      {selectedAdmin?.user.middleName}{" "}
+                      {selectedAdmin?.user.lastName}
+                    </Typography>
+                    <Typography variant="h6">
+                      <strong>Username:</strong> {selectedAdmin?.admin.username}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Email:</strong> {selectedAdmin?.user?.email}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Contact Number:</strong>{" "}
+                      {selectedAdmin?.user?.contactNumber}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Gender:</strong> {selectedAdmin?.user?.gender}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Address:</strong> {selectedAdmin?.user?.address}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Birth Date:</strong>{" "}
+                      {selectedAdmin?.user?.dateOfBirth?.toString()}
+                    </Typography>
+                  </div>
                 </DialogContent>
               </Box>
             </Box>
@@ -717,8 +715,11 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
           <Dialog
             open={open}
             onClose={() => setOpen(false)}
-
-            sx={{ maxWidth: "lg",alignItems:"center",justifyContent:"center" }}
+            sx={{
+              maxWidth: "lg",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
             <Box
               sx={{
@@ -733,7 +734,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
               </IconButton>
             </Box>
             <DialogTitle>Add Admin</DialogTitle>
-            <DialogContent sx={{minWidth:"500px"}}>
+            <DialogContent sx={{ minWidth: "500px" }}>
               <InputLabel>User Email</InputLabel>
               <TextField
                 fullWidth
@@ -753,7 +754,13 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <LoadingButton onClick={handleAdd} disabled={loading} loading={loading}>Add</LoadingButton>
+              <LoadingButton
+                onClick={handleAdd}
+                disabled={loading}
+                loading={loading}
+              >
+                Add
+              </LoadingButton>
             </DialogActions>
           </Dialog>
         </Box>
@@ -790,9 +797,8 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
           </DialogActions>
         </Dialog> */}
       </TableContainer>
+    </Box>
+  );
+};
 
-    </Box>        
-    )
-}
-
-export default AdminProfileDetails
+export default AdminProfileDetails;

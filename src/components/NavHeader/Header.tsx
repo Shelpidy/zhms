@@ -46,10 +46,9 @@ function Header({ setThemeMode }: HeaderProps) {
   );
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
-  useEffect(()=>{
-    setCurrentUser(_currentUser)
-
-  },[_currentUser])
+  useEffect(() => {
+    setCurrentUser(_currentUser);
+  }, [_currentUser]);
 
   const handleSignOut = () => {
     removeCookie("token");
@@ -65,7 +64,7 @@ function Header({ setThemeMode }: HeaderProps) {
       sx={{ background: theme.palette.primary.main }}
     >
       <Toolbar className="flex flex-row justify-between px-5 bg-transparent">
-          <ZHLogo fill={theme.palette.primary.light} width={56} height={41} />
+        <ZHLogo fill={theme.palette.primary.light} width={56} height={41} />
         {!tabView && (
           <>
             <ul className="flex flex-row items-center justify-evenly gap-10">
@@ -175,13 +174,6 @@ function Header({ setThemeMode }: HeaderProps) {
               )}
             </ul>
             <Box className="flex flex-row gap-3 items-center">
-              <Link href="/notification">
-                <Badge badgeContent={10}>
-                  {/* <ShoppingCartCheckoutOutlined htmlColor='white'/> */}
-                  <NotificationsNoneOutlined  sx={{ color: theme.palette.primary.light }} />
-                </Badge>
-              </Link>
-
               <IconButton
                 onClick={setThemeMode}
                 sx={{ color: theme.palette.primary.light }}
@@ -192,14 +184,16 @@ function Header({ setThemeMode }: HeaderProps) {
                   <LightModeSharp />
                 )}
               </IconButton>
-              {currentUser && currentUser.role && currentUser?.role !== "user" && (
-                <Link href={`/dashboard/${currentUser.role}/`}>
-                  <Avatar
-                    src={currentUser.profilePicture}
-                    sx={{ width: 25, height: 25 }}
-                  />
-                </Link>
-              )}
+              {currentUser &&
+                currentUser.role &&
+                currentUser?.role !== "user" && (
+                  <Link href={`/dashboard/${currentUser.role}/`}>
+                    <Avatar
+                      src={currentUser.profilePicture}
+                      sx={{ width: 25, height: 25 }}
+                    />
+                  </Link>
+                )}
 
               {currentUser && !currentUser.role && (
                 <Link

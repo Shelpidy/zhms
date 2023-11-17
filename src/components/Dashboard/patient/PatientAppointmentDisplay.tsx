@@ -6,19 +6,17 @@ import { useRouter } from "next/navigation";
 import { CompareAppointmentBarCharts } from "../charts/AppointmentPerMonthCharts";
 import PatientAppointmentTable from "./subcomponents/PatientAppointmentTable";
 
-
 type DoctorProfile = {
-    doctor: Doctor;
-    user: User;
-    specialization: Specialization;
-  };
+  doctor: Doctor;
+  user: User;
+  specialization: Specialization;
+};
 
 type AppointmentDetail = {
   doctor: DoctorProfile;
   appointment: Appointment;
   roomId: string;
 };
-
 
 const PatientAppointmentDisplay: React.FC = () => {
   const [appointments, setAppointments] = useState<AppointmentDetail[]>([]);
@@ -29,7 +27,9 @@ const PatientAppointmentDisplay: React.FC = () => {
   const handleRefetch = async () => {
     try {
       const response = await fetch(
-        `/api/appointments/patients/${currentUser?.userId || "bbb48da8-495a-42b5-b806-b3796fc2f843"}`,
+        `/api/appointments/patients/${
+          currentUser?.userId || "bbb48da8-495a-42b5-b806-b3796fc2f843"
+        }`,
         { cache: "no-cache" },
       );
       const data = await response.json();
@@ -46,7 +46,7 @@ const PatientAppointmentDisplay: React.FC = () => {
 
   if (!appointments) {
     return (
-        <Box
+      <Box
         sx={{
           height: "95vh",
           minWidth: "100%",

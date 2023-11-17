@@ -27,7 +27,7 @@ import AdminUtilsDisplay from "@/components/Dashboard/admin/AdminUtilsDisplay";
 export default function AdminDashboard() {
   const theme = useTheme();
   const [sideBarCollapsed, setSideBarCollapse] = useState<boolean>(true);
-  const [activePage, setActivePage] = useState<string>("appointments");
+  const [activePage, setActivePage] = useState<string>("profile");
 
   return (
     <main className="min-h-screen grid grid-cols-dashboard">
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
               Requirers
             </MenuItem>
             <MenuItem
-              style={{marginTop: -5}}
+              style={{ marginTop: -5 }}
               color={theme.palette.primary.light}
               icon={<MoreHorizOutlined />}
               onClick={() => setActivePage("utils")}

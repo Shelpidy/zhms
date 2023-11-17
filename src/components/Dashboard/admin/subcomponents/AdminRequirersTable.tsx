@@ -273,10 +273,7 @@ const AdminRequirersTable: React.FC<AdminRequirerTableProps> = ({
           </TableBody>
         </Table>
 
-        <Dialog
-          open={expand}
-          onClose={() => setExpand(false)}
-        >
+        <Dialog open={expand} onClose={() => setExpand(false)}>
           <Box sx={style}>
             <Box
               sx={{
@@ -351,7 +348,7 @@ const AdminRequirersTable: React.FC<AdminRequirerTableProps> = ({
             sx={{ maxWidth: "lg" }}
           >
             <DialogTitle>Add Requirer</DialogTitle>
-            <DialogContent sx={{minWidth: "500px"}}>
+            <DialogContent sx={{ minWidth: "500px" }}>
               <InputLabel>Email</InputLabel>
               <TextField
                 fullWidth

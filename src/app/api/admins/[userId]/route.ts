@@ -58,9 +58,9 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
 }
 
 //// need to create the logic for the put
-export async function PUT(req: Request,{params}:RouteParams) {
+export async function PUT(req: Request, { params }: RouteParams) {
   try {
-    const id = params.userId
+    const id = params.userId;
     if (!id) {
       return new Response(JSON.stringify({ message: "missing parameters" }), {
         status: 404,
@@ -75,7 +75,6 @@ export async function PUT(req: Request,{params}:RouteParams) {
       { where: { adminId: id } },
     );
 
-
     return new Response(
       JSON.stringify({ message: "admin updated successfully", updatedAdmin }),
       { status: 202 },
@@ -89,9 +88,9 @@ export async function PUT(req: Request,{params}:RouteParams) {
   }
 }
 
-export async function DELETE(req: Request,{params}:RouteParams) {
+export async function DELETE(req: Request, { params }: RouteParams) {
   try {
-    const id = params.userId
+    const id = params.userId;
     if (!id) {
       return new Response(JSON.stringify({ message: "Missing parameter id" }), {
         status: 404,
@@ -118,4 +117,3 @@ export async function DELETE(req: Request,{params}:RouteParams) {
     );
   }
 }
-

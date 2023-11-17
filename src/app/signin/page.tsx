@@ -62,7 +62,7 @@ const SignInPage: React.FC = () => {
       let data = await reponse.json();
       if (reponse.status === 201) {
         setCookie("token", String(data.token));
-        router.push("/");
+        window.location.assign("/");
       } else {
         Toast.fire({
           icon: "error",
@@ -145,13 +145,14 @@ const SignInPage: React.FC = () => {
           onChange={handleInputChange}
           sx={{ mb: 2 }}
         />
-        <LoadingButton 
-         variant="contained"
-         loading={loading}
-         disabled={loading}
-         color="primary" 
-         size="medium" 
-         onClick={handleFormSubmit}>
+        <LoadingButton
+          variant="contained"
+          loading={loading}
+          disabled={loading}
+          color="primary"
+          size="medium"
+          onClick={handleFormSubmit}
+        >
           Sign In
         </LoadingButton>
       </Card>

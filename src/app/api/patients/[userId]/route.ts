@@ -65,9 +65,8 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
 
 export async function PUT(req: NextRequest, { params }: RouteParams) {
   try {
-
     const { userId } = params;
-    
+
     const data = await req.json();
     const email = data.patientEmail as string;
     const patientId = data.patientId as string;
@@ -80,7 +79,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
         status: 404,
       });
     }
-    const { bloodGroupId,}  = patient.dataValues;
+    const { bloodGroupId } = patient.dataValues;
     const bloodGrpTable = await BloodGroup.findOne({
       where: { bloodGroupId },
     });

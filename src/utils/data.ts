@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 
+
 // MAIL_PORT = 465
 // MAIL_HOST = smtp.mail.yahoo.com
 // MAIL_USER = teax.sl@yahoo.com
@@ -16,7 +17,6 @@ import nodemailer from "nodemailer";
 //   },
 // } satisfies SMTPTransport.Options;
 // this.transporter = nodeMailer.createTransport(transportOption);
-
 
 // Create a transporter using SMTP transport
 const transporter = nodemailer.createTransport({

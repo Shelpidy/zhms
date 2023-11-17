@@ -20,9 +20,8 @@ import {
   Modal,
   Typography,
   Avatar,
-  
 } from "@mui/material";
-import {LoadingButton} from "@mui/lab"
+import { LoadingButton } from "@mui/lab";
 import { Delete, Edit, Add, Search } from "@mui/icons-material";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import CloseIcon from "@mui/icons-material/Close";
@@ -137,7 +136,7 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
   async function handleDelete(doctorId: string) {
     console.log(doctorId);
     try {
-      setLoading(true)
+      setLoading(true);
       // Logic to delete the appointment
       console.log(doctorId);
       const request = await fetch(`/api/doctors?doctorId=${doctorId}`, {
@@ -158,12 +157,12 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
           text: data?.message,
         });
       }
-      setLoading(false)
+      setLoading(false);
       onRefetch();
       // Update the appointments state after deletion
     } catch (error) {
       console.log(error);
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -200,7 +199,7 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
 
   async function handleAdd() {
     try {
-      setLoading(true)
+      setLoading(true);
       console.log("New Appointment", newDoctor);
       // Logic to add a new appointment
       const request = await fetch("/api/doctors", {
@@ -223,11 +222,11 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
           text: data?.message,
         });
       }
-      setLoading(false)
+      setLoading(false);
       onRefetch();
     } catch (error) {
       console.log(error);
-      setLoading(false)
+      setLoading(false);
     }
     // Update the appointments state after adding
     handleClose();
@@ -347,10 +346,7 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
               ))}
           </TableBody>
         </Table>
-        <Dialog
-          open={expand}
-          onClose={() => setExpand(false)}
-        >
+        <Dialog open={expand} onClose={() => setExpand(false)}>
           <Box sx={style}>
             <Box
               sx={{
@@ -375,43 +371,49 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
                   marginTop: 2,
                 }}
               >
-                <DialogContent sx={{minWidth: "500px"}}>
-                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center",}}>  
-                <Avatar
-                  alt={selectedDoctor?.user.firstName}
-                  sx={{ width: "200px", height: "200px" }}
-                  src={selectedDoctor?.user.profileImage}
-                />
-                </Box>
-                <div>
-                  <Typography variant="h6">
-                    <strong>Doctor Name:</strong>{" "}
-                    {selectedDoctor?.user.firstName}{" "}
-                    {selectedDoctor?.user.middleName}{" "}
-                    {selectedDoctor?.user.lastName}
-                  </Typography>
-                  <Typography variant="h6">
-                    <strong>Specialization:</strong>{" "}
-                    {selectedDoctor?.specialization.specializationName}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Email:</strong> {selectedDoctor?.user?.email}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Contact Number:</strong>{" "}
-                    {selectedDoctor?.user?.contactNumber}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Gender:</strong> {selectedDoctor?.user?.gender}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Address:</strong> {selectedDoctor?.user?.address}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>Birth Date:</strong>{" "}
-                    {selectedDoctor?.user?.dateOfBirth?.toString()}
-                  </Typography>
-                </div>
+                <DialogContent sx={{ minWidth: "500px" }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Avatar
+                      alt={selectedDoctor?.user.firstName}
+                      sx={{ width: "200px", height: "200px" }}
+                      src={selectedDoctor?.user.profileImage}
+                    />
+                  </Box>
+                  <div>
+                    <Typography variant="h6">
+                      <strong>Doctor Name:</strong>{" "}
+                      {selectedDoctor?.user.firstName}{" "}
+                      {selectedDoctor?.user.middleName}{" "}
+                      {selectedDoctor?.user.lastName}
+                    </Typography>
+                    <Typography variant="h6">
+                      <strong>Specialization:</strong>{" "}
+                      {selectedDoctor?.specialization.specializationName}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Email:</strong> {selectedDoctor?.user?.email}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Contact Number:</strong>{" "}
+                      {selectedDoctor?.user?.contactNumber}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Gender:</strong> {selectedDoctor?.user?.gender}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Address:</strong> {selectedDoctor?.user?.address}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Birth Date:</strong>{" "}
+                      {selectedDoctor?.user?.dateOfBirth?.toString()}
+                    </Typography>
+                  </div>
                 </DialogContent>
               </Box>
             </Box>
@@ -421,11 +423,14 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
           <Dialog
             open={open}
             onClose={() => setOpen(false)}
-
-            sx={{ maxWidth: "lg",alignItems:"center",justifyContent:"center" }}
+            sx={{
+              maxWidth: "lg",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
             <DialogTitle>Add Doctor</DialogTitle>
-            <DialogContent sx={{minWidth:"500px"}}>
+            <DialogContent sx={{ minWidth: "500px" }}>
               <InputLabel>User Email</InputLabel>
               <TextField
                 fullWidth
@@ -445,7 +450,13 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <LoadingButton onClick={handleAdd} disabled={loading} loading={loading}>Add</LoadingButton>
+              <LoadingButton
+                onClick={handleAdd}
+                disabled={loading}
+                loading={loading}
+              >
+                Add
+              </LoadingButton>
             </DialogActions>
           </Dialog>
         </Box>

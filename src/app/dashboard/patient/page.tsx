@@ -36,8 +36,8 @@ export default function PatientDashboard() {
           collapsed={sideBarCollapsed}
           className="h-screen w-40 sticky top-0"
         >
-         <Menu
-             style={{
+          <Menu
+            style={{
               backgroundColor: theme.palette.primary.main,
               height: "90vh",
               zIndex: 0,
@@ -55,7 +55,7 @@ export default function PatientDashboard() {
               },
             }}
           >
-          <IconButton
+            <IconButton
               sx={{ marginLeft: "20px" }}
               onClick={() => setSideBarCollapse(!sideBarCollapsed)}
             >
@@ -85,10 +85,8 @@ export default function PatientDashboard() {
         </Sidebar>
       </div>
       <div className="m-10 h-screen overflow-y-scroll hide-scrollbar">
-        {activePage === "profile" && <PatientProfileDisplay/> }
-        {activePage === "appointments" && (
-          <PatientAppointmentDisplay/>
-        )}
+        {activePage === "profile" && <PatientProfileDisplay />}
+        {activePage === "appointments" && <PatientAppointmentDisplay />}
         {activePage === "requirers" && <BloodRequirementDisplay />}
       </div>
     </main>

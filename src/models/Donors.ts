@@ -18,6 +18,9 @@ Donor.init(
     middleName: {
       type: DataTypes.STRING(50),
     },
+    profileImage: {
+      type: DataTypes.STRING(8000),
+    },
     lastName: {
       type: DataTypes.STRING(50),
       allowNull: false,

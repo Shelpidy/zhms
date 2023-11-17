@@ -50,11 +50,11 @@ const reducer = (state: ContactFormObject = initialState, action: Action) => {
 };
 
 type Email = {
-  content:string
-  email:string
-  subject:string
-  title:string
-}
+  content: string;
+  email: string;
+  subject: string;
+  title: string;
+};
 
 type ContactFormProps = {
   email?: string;
@@ -69,13 +69,11 @@ function ContactForm({ email, phoneNumbers, address }: ContactFormProps) {
 
   /// Make a contact Request
   const handleContactForm = () => {
-    console.log("Submitting form Object",formObjectState);
-    
+    console.log("Submitting form Object", formObjectState);
   };
 
   return (
     <Box className="flex my-4 flex-col p-2 justify-center gap-10 shadow-md pb-10 md:flex-row md:gap-20">
-     
       <Box className="pt-1 px-2 md:pt-4">
         <Stack direction="column">
           <Box className="flex flex-row items-center justify-start gap-3 my-2">

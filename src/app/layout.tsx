@@ -13,6 +13,23 @@ import Provider from "react-redux";
 import Store from "@/redux/store";
 import Header from "@/components/NavHeader/Header";
 import { CookiesProvider } from "react-cookie";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDcGELVfcgjFnBn73IiQuwVWBLdlo0rlnM",
+  authDomain: "zhms-35f74.firebaseapp.com",
+  projectId: "zhms-35f74",
+  storageBucket: "zhms-35f74.appspot.com",
+  messagingSenderId: "516817485262",
+  appId: "1:516817485262:web:2252f0f01415e99b3f7f9f",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 // const inter = Inter({ subsets: ['latin'] })
 // const poppinsLight = Poppins({weight:"300",variable:"--poppinsLight",subsets: ['latin']})
@@ -49,7 +66,7 @@ export default function RootLayout({
           },
         },
         typography: {
-          fontFamily: ["PoppinsLight","PoppinsMedium", "Inter"].join(","),
+          fontFamily: ["PoppinsLight", "PoppinsMedium", "Inter"].join(","),
         },
       }),
     [prefersDarkMode, themeMode],

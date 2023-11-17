@@ -20,6 +20,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(50),
       },
+      profileImage: {
+        type: Sequelize.STRING(8000),
+      },
       gender: {
         allowNull: false,
         type: Sequelize.ENUM("male", "female", "other"),

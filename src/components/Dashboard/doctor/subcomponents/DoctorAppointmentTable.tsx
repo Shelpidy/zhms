@@ -182,7 +182,7 @@ const DoctorAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
         />
       </Box>
       <TableContainer component={Paper}>
-        <Table sx={{minWidth:"70vw"}}>
+        <Table sx={{ minWidth: "70vw" }}>
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontWeight: "bold" }}>Patient</TableCell>
@@ -256,10 +256,7 @@ const DoctorAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
           </TableBody>
         </Table>
       </TableContainer>
-      <Dialog
-        open={expand}
-        onClose={() => setExpand(false)}
-      >
+      <Dialog open={expand} onClose={() => setExpand(false)}>
         <Box sx={style}>
           <Box
             sx={{

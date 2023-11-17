@@ -82,15 +82,18 @@ export async function PUT(req: NextRequest, { params }: Params) {
         { status: 404 },
       );
     }
-    const { specializationId } = doctor.dataValues
-    const updatedSpecialization = await Specialization.update({specializationName : newSpecialization}, {where: {specializationId} });
-    let updatedDoctor = ""
+    const { specializationId } = doctor.dataValues;
+    const updatedSpecialization = await Specialization.update(
+      { specializationName: newSpecialization },
+      { where: { specializationId } },
+    );
+    let updatedDoctor = "";
 
     return new Response(
       JSON.stringify({
         message: "Doctor updated successfully",
         doctor: updatedDoctor,
-        specialization: updatedSpecialization
+        specialization: updatedSpecialization,
       }),
       { status: 202 },
     );

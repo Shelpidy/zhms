@@ -18,7 +18,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     let adminUserId = params.userId;
 
-    console.log({AminUserId:adminUserId})
+    console.log({ AminUserId: adminUserId });
     const appointments = await Appointment.findAll();
 
     const appointmentsWithDetails = await Promise.all(

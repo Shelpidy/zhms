@@ -12,8 +12,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Socket} from "socket.io-client";
-
+import { Socket } from "socket.io-client";
 
 interface RoomType {
   roomId: string;
@@ -28,21 +27,26 @@ interface RoomType {
 interface MessageDisplayProps {
   roomId: string;
   socket: Socket;
-  room:RoomType | null}
+  room: RoomType | null;
+}
 
 interface BubbleMessage {
   senderId: string;
-  recipientId:string;
+  recipientId: string;
   message: string;
   roomId: string;
 }
 
-const MessageDisplay: React.FC<MessageDisplayProps> = ({ roomId, socket,room }) => {
+const MessageDisplay: React.FC<MessageDisplayProps> = ({
+  roomId,
+  socket,
+  room,
+}) => {
   const [typing, setTyping] = useState<boolean>(false);
   const [online, setOnline] = useState<boolean>(false);
   const [messages, setMessages] = useState<BubbleProps[]>([]);
   const [messageInput, setMessageInput] = useState<string>("");
-  const currentUser = useCurrentUser()
+  const currentUser = useCurrentUser();
   let ref = React.useRef(null);
 
   const theme = useTheme();
@@ -52,16 +56,17 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ roomId, socket,room }) 
       console.log("Disconnected from server");
     });
 
-    socket.on("typing", (data:{typing:boolean}) => {
+    socket.on("typing", (data: { typing: boolean }) => {
       setTyping(data.typing);
     });
 
-    socket.on("online", (data:{online:boolean}) => {
+    socket.on("online", (data: { online: boolean }) => {
       setOnline(data.online);
     });
     socket.on("msg", (message: BubbleProps) => {
-      console.log({message})
-      message.alignment = message.userId === currentUser?.userId ? "right":"left";
+      console.log({ message });
+      message.alignment =
+        message.userId === currentUser?.userId ? "right" : "left";
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
@@ -75,49 +80,50 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ roomId, socket,room }) 
     // };
   }, [socket]);
 
-  useEffect(()=>{
-    async function getMessages(){
-      try{
-
-        let response = await fetch(`/api/messages/${roomId}/${currentUser?.userId}`,{next:{revalidate:0},method:"GET"})
-        let data = await response.json()
-        if(response.status === 200){
-          setMessages(data.messages.reverse())
-          console.log({messages:data.messages})
-        }else{
-          console.log(data)
+  useEffect(() => {
+    async function getMessages() {
+      try {
+        let response = await fetch(
+          `/api/messages/${roomId}/${currentUser?.userId}`,
+          { next: { revalidate: 0 }, method: "GET" },
+        );
+        let data = await response.json();
+        if (response.status === 200) {
+          setMessages(data.messages.reverse());
+          console.log({ messages: data.messages });
+        } else {
+          console.log(data);
         }
-      }catch(err){
-        console.log(err)
+      } catch (err) {
+        console.log(err);
       }
     }
-    if(currentUser){
-      getMessages()
+    if (currentUser) {
+      getMessages();
     }
-  },[currentUser])
+  }, [currentUser]);
 
-
-  useEffect(()=>{
-    if(currentUser){
-    socket.emit("activeRoom",{roomId:roomId,userId:currentUser.userId})}
-  },[socket,roomId,currentUser])
-
-  const handleSendMessage = ()=>{
-    if(currentUser?.userId && room?.recipientId && messageInput){
-      let msg:BubbleMessage = {
-        senderId:currentUser.userId as string,
-        roomId:roomId,
-        recipientId:room.recipientId,
-        message:messageInput
-      }
-
-      console.log({msg})
-      socket.emit("msg",msg)
-      setMessageInput("")
+  useEffect(() => {
+    if (currentUser) {
+      socket.emit("activeRoom", { roomId: roomId, userId: currentUser.userId });
     }
-   
-  }
-   
+  }, [socket, roomId, currentUser]);
+
+  const handleSendMessage = () => {
+    if (currentUser?.userId && room?.recipientId && messageInput) {
+      let msg: BubbleMessage = {
+        senderId: currentUser.userId as string,
+        roomId: roomId,
+        recipientId: room.recipientId,
+        message: messageInput,
+      };
+
+      console.log({ msg });
+      socket.emit("msg", msg);
+      setMessageInput("");
+    }
+  };
+
   return (
     <Box
       style={{
@@ -163,10 +169,10 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ roomId, socket,room }) 
           </Typography>
         </Box>
         <Typography color="primary.light" variant="body2">
-         {typing && <span>typing...</span> }  
+          {typing && <span>typing...</span>}
         </Typography>
         <Typography className="mx-5" color="primary.light" variant="body2">
-        {online && <span>online</span> } 
+          {online && <span>online</span>}
         </Typography>
       </Box>
       <Box
@@ -175,7 +181,6 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ roomId, socket,room }) 
           minWidth: "50vw",
           width: "inherit",
           overFlowY: "scroll",
-
         }}
       >
         {messages.map((message) => {
@@ -192,31 +197,29 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ roomId, socket,room }) 
           marginTop: "8px",
         }}
       >
-        <Box sx={{marginBottom:"10px"}}>
+        <Box sx={{ marginBottom: "10px" }}>
           <TextField
-            onChange={(e)=>setMessageInput(e.target.value)}
+            onChange={(e) => setMessageInput(e.target.value)}
             variant="filled"
             InputProps={{
-              style:{
-                borderRadius:'2%',
-                minWidth:"25vw",
-                borderBottom:"none"
-                
+              style: {
+                borderRadius: "2%",
+                minWidth: "25vw",
+                borderBottom: "none",
               },
-              endAdornment:(<InputAdornment position="end">
-                 <IconButton onClick={handleSendMessage}>
-                  <SendOutlined />
-                </IconButton>
-              </InputAdornment>)
-            
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleSendMessage}>
+                    <SendOutlined />
+                  </IconButton>
+                </InputAdornment>
+              ),
             }}
-            
             multiline
             size="small"
             placeholder="Type a message..."
           />
         </Box>
-       
       </Box>
     </Box>
   );

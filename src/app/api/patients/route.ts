@@ -72,8 +72,8 @@ export async function POST(req: Request) {
     const existingPatient = await Patient.findOne({
       where: { userId: user.userId },
     });
-    await user.update({role:"patient"})
-  
+    await user.update({ role: "patient" });
+
     if (existingPatient) {
       return new Response(
         JSON.stringify({ message: "Patient already exists" }),
@@ -84,9 +84,11 @@ export async function POST(req: Request) {
     }
 
     // Adding a new blood group to the database
-    const bldGrp = await BloodGroup.findOne({where:{
-      groupName: bldGroup,
-    }});
+    const bldGrp = await BloodGroup.findOne({
+      where: {
+        groupName: bldGroup,
+      },
+    });
     const bloodGroupId = bldGrp?.getDataValue("bloodGroupId");
 
     // Create a new patient
@@ -95,8 +97,11 @@ export async function POST(req: Request) {
       diagnosis,
       bloodGroupId,
     });
-   await Patient.update({role: 'patient'}, {where: {userId: user.userId}})
-   
+    await Patient.update(
+      { role: "patient" },
+      { where: { userId: user.userId } },
+    );
+
     return new Response(
       JSON.stringify({ message: "New patient added successfully", newPatient }),
       {

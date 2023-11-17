@@ -17,10 +17,8 @@ interface Notification {
   timestamp: string;
 }
 
-
 const NotificationScreen = () => {
-
-  const [notifications,setNotifications] = useState<Notification[]>([])
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   return (
     <Container>
       <Paper elevation={3} style={{ minHeight: "500px", padding: "20px" }}>

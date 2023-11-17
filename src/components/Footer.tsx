@@ -20,7 +20,7 @@ function Footer() {
       className="p-6 shadow-lg w-100 bottom-0 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4"
     >
       <Box className="m-4 flex gap-4 flex-col mx-5 items-start justify-start">
-        <ZHLogo fill={theme.palette.primary.light} width={56} height={41}/>
+        <ZHLogo fill={theme.palette.primary.light} width={56} height={41} />
         {/* <Typography variant='h4' className='text-gray-400 font-semibold font-poppinsMedium'>SchoolAll</Typography> */}
         <p className="my-1" style={{ color: theme.palette.primary.light }}>
           <span>&#169; Copywrite 2023</span>

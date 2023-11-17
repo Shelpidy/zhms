@@ -23,183 +23,183 @@ import Swal from "sweetalert2";
 import { useCurrentUser } from "@/hooks/customHooks";
 
 interface UserProfileProps {
-    user: User;
-    onRefetch: () => void;
+  user: User;
+  onRefetch: () => void;
 }
 
 const updateUser = {
-    address: "123 Main Street",
-    contactNumber: "1234567890",
-    dateOfBirth: "31st August, 2023",
-    email: "kamaradennis36@gmail.com",
-    specialization: "bone specialist",
-    firstName: "Dennis",
-    bloodGroupName: "A+",
-    gender: "male",
-    lastName: "Kamara",
-    profileImage:
-      null ||
-      "https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-    role: "patient",
+  address: "123 Main Street",
+  contactNumber: "1234567890",
+  dateOfBirth: "31st August, 2023",
+  email: "kamaradennis36@gmail.com",
+  specialization: "bone specialist",
+  firstName: "Dennis",
+  bloodGroupName: "A+",
+  gender: "male",
+  lastName: "Kamara",
+  profileImage:
+    null ||
+    "https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
+  role: "patient",
 };
 
 const UserProfile = () => {
+  const theme = useTheme();
+  const [userProfile, setUserProfile] = useState<User | null>();
 
-    const theme  = useTheme()
-    const [userProfile, setUserProfile] = useState<User | null>();
+  const currentUser = useCurrentUser();
 
-    const currentUser = useCurrentUser();
-  
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedData, setEditedData] = useState({});
-    const [loading, setLoading] = useState(false);
-  
-    const [updateUser, setUpdateUser] = useState<{
-        userId: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        address: string;
-        gender: string;
-        contactNumber: string;
-        dateOfBirth: string;
-        profileImage: string;
-      }>({
-        userId: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        address: "",
-        gender: "",
-        contactNumber: "",
-        dateOfBirth: "",
-        profileImage: "",
-      });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedData, setEditedData] = useState({});
+  const [loading, setLoading] = useState(false);
 
-      const handleRefetch = async () => {
-        try {
-          /* Fetch the single doctor by userId instead.. use the currentUser 
+  const [updateUser, setUpdateUser] = useState<{
+    userId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    address: string;
+    gender: string;
+    contactNumber: string;
+    dateOfBirth: string;
+    profileImage: string;
+  }>({
+    userId: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    address: "",
+    gender: "",
+    contactNumber: "",
+    dateOfBirth: "",
+    profileImage: "",
+  });
+
+  const handleRefetch = async () => {
+    try {
+      /* Fetch the single doctor by userId instead.. use the currentUser 
           object to get userId, Do the same for all profile  {userId,role,profilePicture,displayName} */
-          const response = await fetch(`/api/users/${currentUser?.userId || "97cc8142-a01e-45b6-a363-a5e5b2ab69b3"} `, {
-            cache: "no-cache",
-          });
-          const data = await response.json();
-          if (response.status === 200) {
-            console.log(data);
-            setUserProfile(data.user);
-          } else {
-            console.log(data.message);
-          }
-        } catch (error) {
-          console.error("Error fetching Doctors:", error);
-        }
-      };
-      useEffect(() => {
-        handleRefetch();
-      }, []);
-
-      if (!userProfile) {
-        return (
-          <Box
-          sx={{
-            height: "95vh",
-            minWidth: "100%",
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "5px",
-          }}
-        >
-          <CircularProgress color="primary" size={30} />
-          <Typography sx={{ fontWeight: "bold", color: "primary.main" }}>
-            LOADING...
-          </Typography>
-        </Box>
-        );
+      const response = await fetch(
+        `/api/users/${
+          currentUser?.userId || "97cc8142-a01e-45b6-a363-a5e5b2ab69b3"
+        } `,
+        {
+          cache: "no-cache",
+        },
+      );
+      const data = await response.json();
+      if (response.status === 200) {
+        console.log(data);
+        setUserProfile(data.user);
+      } else {
+        console.log(data.message);
       }
+    } catch (error) {
+      console.error("Error fetching Doctors:", error);
+    }
+  };
+  useEffect(() => {
+    handleRefetch();
+  }, []);
 
-      const handleEdit = (userprofile: User) => {
-        console.log(userprofile);
-        setIsEditing(true);
-        // Initialize editedData with the current user data
-        setEditedData(updateUser);
-        
-        setUpdateUser({
-          userId: userprofile?.userId,
-          firstName: userprofile?.firstName,
-          lastName: userprofile?.lastName,
-          email: userprofile?.email,
-          address: userprofile?.address || "",
-          gender: userprofile?.gender,
-          contactNumber: userprofile?.contactNumber,
-          dateOfBirth: userprofile?.dateOfBirth || "",
-          profileImage: userprofile?.profileImage || "",
-        });
-      };
+  if (!userProfile) {
+    return (
+      <Box
+        sx={{
+          height: "95vh",
+          minWidth: "100%",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: "5px",
+        }}
+      >
+        <CircularProgress color="primary" size={30} />
+        <Typography sx={{ fontWeight: "bold", color: "primary.main" }}>
+          LOADING...
+        </Typography>
+      </Box>
+    );
+  }
 
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "center",
-        timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false,
+  const handleEdit = (userprofile: User) => {
+    console.log(userprofile);
+    setIsEditing(true);
+    // Initialize editedData with the current user data
+    setEditedData(updateUser);
+
+    setUpdateUser({
+      userId: userprofile?.userId,
+      firstName: userprofile?.firstName,
+      lastName: userprofile?.lastName,
+      email: userprofile?.email,
+      address: userprofile?.address || "",
+      gender: userprofile?.gender,
+      contactNumber: userprofile?.contactNumber,
+      dateOfBirth: userprofile?.dateOfBirth || "",
+      profileImage: userprofile?.profileImage || "",
+    });
+  };
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "center",
+    timer: 3000,
+    timerProgressBar: true,
+    showConfirmButton: false,
+  });
+
+  ///// performs the put request//////
+  async function handleUpdate(userId: string) {
+    // Logic to update the appointment
+    console.log(updateUser);
+    try {
+      setLoading(true);
+      const request = await fetch(`/api/users/${userId}`, {
+        method: "PUT",
+        body: JSON.stringify(updateUser),
+        headers: { "Content-Type": "application/json" },
       });
 
-      ///// performs the put request//////
-      async function handleUpdate(userId: string) {
-        // Logic to update the appointment
-        console.log(updateUser);
-        try {
-          setLoading(true)
-          const request = await fetch (`/api/users/${userId}`, {
-            method: "PUT",
-            body: JSON.stringify(updateUser),
-            headers: {"Content-Type": "application/json"}
-          })
-          
-          const data = await request.json()
-          if (request.status === 202) {
-            Toast.fire({
-              icon: "success",
-              iconColor: "green",
-              text: `${data?.message}`,
-            })
-          }
-          else{
-            Toast.fire({
-              icon: "error",
-              iconColor: "red",
-              text: `${data?.message}`,
-            })
-          }
-        
-        } catch (error:any) {
-          console.log(error.message);
-          Toast.fire({
-            icon: "error",
-            iconColor: "red",
-            text: "An error occurred while updating.",
-          });
-          
-        }finally{
-            setLoading(false)
-            handleRefetch();
-            setIsEditing(false);
-        }
-        // Update the appointments state after updating
+      const data = await request.json();
+      if (request.status === 202) {
+        Toast.fire({
+          icon: "success",
+          iconColor: "green",
+          text: `${data?.message}`,
+        });
+      } else {
+        Toast.fire({
+          icon: "error",
+          iconColor: "red",
+          text: `${data?.message}`,
+        });
       }
-    
-      
-      const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // const file = event?.target?.files[0];
-        // if (file) {
-        //   setUpdateUser({...updateUser, pictureImage:"file"});
-        // }
-      };
-    return (
-        <Box>
-         <Paper elevation={3} className="p-4">
+    } catch (error: any) {
+      console.log(error.message);
+      Toast.fire({
+        icon: "error",
+        iconColor: "red",
+        text: "An error occurred while updating.",
+      });
+    } finally {
+      setLoading(false);
+      handleRefetch();
+      setIsEditing(false);
+    }
+    // Update the appointments state after updating
+  }
+
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // const file = event?.target?.files[0];
+    // if (file) {
+    //   setUpdateUser({...updateUser, pictureImage:"file"});
+    // }
+  };
+  return (
+    <Box>
+      <Paper elevation={3} className="p-4">
         <Box
           sx={{
             display: "flex",
@@ -261,7 +261,7 @@ const UserProfile = () => {
                   name="firstName"
                   variant="outlined"
                   label="First Name"
-                  sx={{marginLeft: 2, marginTop: 1}}
+                  sx={{ marginLeft: 2, marginTop: 1 }}
                   size="small"
                   value={updateUser.firstName}
                   onChange={(e) =>
@@ -277,7 +277,7 @@ const UserProfile = () => {
                   name="lastName"
                   label="Last Name"
                   size="small"
-                  sx={{ marginTop: 1, marginLeft: {xs:2} }}
+                  sx={{ marginTop: 1, marginLeft: { xs: 2 } }}
                   value={updateUser.lastName}
                   onChange={(e) =>
                     setUpdateUser({ ...updateUser, lastName: e.target.value })
@@ -368,7 +368,7 @@ const UserProfile = () => {
                   <ListItemText
                     primary="Date of Birth"
                     secondary={new Date(
-                     userProfile?.dateOfBirth ?? "",
+                      userProfile?.dateOfBirth ?? "",
                     ).toLocaleDateString()}
                   />
                 )}{" "}
@@ -386,40 +386,42 @@ const UserProfile = () => {
                     }
                   />
                 ) : (
-                  <ListItemText primary="Email" secondary={userProfile?.email} />
+                  <ListItemText
+                    primary="Email"
+                    secondary={userProfile?.email}
+                  />
                 )}{" "}
               </ListItem>
               <ListItem>
-              {isEditing ? (
-                <LoadingButton
-                  size="large"
-                  variant="contained"
-                  loading={loading}
-                  disabled={loading}
-                  color="inherit"
-                  onClick={() => handleUpdate(userProfile.userId)}
-                >
-                  <SaveAlt />
-                  <span style={{ marginLeft: 5 }}>Save</span>
-                </LoadingButton>
-              ) : (
-                <LoadingButton
-                  size="large"
-                  variant="contained"
-                  color="inherit"
-                  onClick={() => handleEdit(userProfile)}
-                >
-                  <Edit /> <span style={{ marginLeft: 5 }}>Edit</span>
-                </LoadingButton>
-              )}
+                {isEditing ? (
+                  <LoadingButton
+                    size="large"
+                    variant="contained"
+                    loading={loading}
+                    disabled={loading}
+                    color="inherit"
+                    onClick={() => handleUpdate(userProfile.userId)}
+                  >
+                    <SaveAlt />
+                    <span style={{ marginLeft: 5 }}>Save</span>
+                  </LoadingButton>
+                ) : (
+                  <LoadingButton
+                    size="large"
+                    variant="contained"
+                    color="inherit"
+                    onClick={() => handleEdit(userProfile)}
+                  >
+                    <Edit /> <span style={{ marginLeft: 5 }}>Edit</span>
+                  </LoadingButton>
+                )}
               </ListItem>
             </List>
-            
           </Box>
         </Box>
       </Paper>
-       </Box>
-    )
-}
+    </Box>
+  );
+};
 
-export default UserProfile
+export default UserProfile;

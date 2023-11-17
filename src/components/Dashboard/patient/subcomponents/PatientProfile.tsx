@@ -22,164 +22,156 @@ import Swal from "sweetalert2";
 import { userAgent } from "next/server";
 
 type PatientProfile = {
-    patient: Patient;
-    user: User;
+  patient: Patient;
+  user: User;
 };
-  
+
 interface PatientProfileProps {
-    patient: PatientProfile;
-    onRefetch: () => void;
+  patient: PatientProfile;
+  onRefetch: () => void;
 }
 
-const updateUser = {
-    address: "123 Main Street",
-    contactNumber: "1234567890",
-    dateOfBirth: "31st August, 2023",
-    email: "kamaradennis36@gmail.com",
-    specialization: "bone specialist",
-    firstName: "Dennis",
-    bloodGroupName: "A+",
-    gender: "male",
-    lastName: "Kamara",
-    profileImage:
-      null ||
-      "https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-    role: "patient",
-};
+// const updateUser = {
+//   address: "123 Main Street",
+//   contactNumber: "1234567890",
+//   dateOfBirth: "31st August, 2023",
+//   email: "kamaradennis36@gmail.com",
+//   specialization: "bone specialist",
+//   firstName: "Dennis",
+//   bloodGroupName: "A+",
+//   gender: "male",
+//   lastName: "Kamara",
+//   profileImage:
+//     null ||
+//     "https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
+//   role: "patient",
+// };
 
 const PatientProfileDetails: React.FC<PatientProfileProps> = ({
-    patient,
-    onRefetch,
-  }) => {
+  patient,
+  onRefetch,
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedData, setEditedData] = useState({});
+  const [loading, setLoading] = useState(false);
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedData, setEditedData] = useState({});
-    const [loading, setLoading] = useState(false);
-  
-    const [updatePatient, setUpdatePatient] = useState<{
-    diagnosis: string,
-    bloodGroupName: string,
-    }>({
-     diagnosis: "",
-     bloodGroupName: "",
-    })
-    const [updateUser, setUpdateUser] = useState<{
-        userId: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        address: string;
-        gender: string;
-        contactNumber: string;
-        dateOfBirth: string;
-        profileImage: string;
-      }>({
-        userId: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        address: "",
-        gender: "",
-        contactNumber: "",
-        dateOfBirth: "",
-        profileImage: "",
+  const [updatePatient, setUpdatePatient] = useState<{
+    diagnosis: string;
+    bloodGroupName: string;
+  }>({
+    diagnosis: "",
+    bloodGroupName: "",
+  });
+  const [updateUser, setUpdateUser] = useState<{
+    userId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    address: string;
+    gender: string;
+    contactNumber: string;
+    dateOfBirth: string;
+    profileImage: string;
+  }>({
+    userId: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    address: "",
+    gender: "",
+    contactNumber: "",
+    dateOfBirth: "",
+    profileImage: "",
+  });
+
+  const handleEdit = (patientprofile: PatientProfile) => {
+    console.log(patientprofile);
+    setIsEditing(true);
+    // Initialize editedData with the current patient data
+    setEditedData(updateUser);
+    setUpdatePatient({
+      diagnosis: patientprofile.patient.diagnosis,
+      bloodGroupName: "",
+    });
+    setUpdateUser({
+      userId: patientprofile?.user?.userId,
+      firstName: patientprofile?.user?.firstName,
+      lastName: patientprofile?.user?.lastName,
+      email: patientprofile?.user?.email,
+      address: patientprofile?.user?.address || "",
+      gender: patientprofile?.user?.gender,
+      contactNumber: patientprofile?.user?.contactNumber,
+      dateOfBirth: patientprofile?.user?.dateOfBirth || "",
+      profileImage: patientprofile?.user?.profileImage || "",
+    });
+  };
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "center",
+    timer: 3000,
+    timerProgressBar: true,
+    showConfirmButton: false,
+  });
+
+  ///// performs the put request//////
+  async function handleUpdate(userId: string) {
+    // Logic to update the appointment
+    console.log(updateUser, updatePatient);
+    try {
+      setLoading(true);
+      const request1 = await fetch(`/api/patients/${userId}`, {
+        method: "PUT",
+        body: JSON.stringify(updatePatient),
+        headers: { "Content-Type": "application/json" },
       });
-    
+      const request2 = await fetch(`/api/users/${userId}`, {
+        method: "PUT",
+        body: JSON.stringify(updateUser),
+        headers: { "Content-Type": "application/json" },
+      });
+      const [response1, response2] = await Promise.all([request1, request2]);
 
-    
-      const handleEdit = (patientprofile: PatientProfile) => {
-        console.log(patientprofile);
-        setIsEditing(true);
-        // Initialize editedData with the current patient data
-        setEditedData(updateUser);
-        setUpdatePatient({
-         diagnosis: patientprofile.patient.diagnosis,
-         bloodGroupName: "",
-        })
-        setUpdateUser({
-          userId: patientprofile?.user?.userId,
-          firstName: patientprofile?.user?.firstName,
-          lastName: patientprofile?.user?.lastName,
-          email: patientprofile?.user?.email,
-          address: patientprofile?.user?.address || "",
-          gender: patientprofile?.user?.gender,
-          contactNumber: patientprofile?.user?.contactNumber,
-          dateOfBirth: patientprofile?.user?.dateOfBirth || "",
-          profileImage: patientprofile?.user?.profileImage || "",
+      const data1 = await response1.json();
+      const data2 = await response2.json();
+
+      if (response1.status === 202 && response2.status === 202) {
+        Toast.fire({
+          icon: "success",
+          iconColor: "green",
+          text: `${data1?.message} ${data2?.message}`,
         });
-      };
-
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "center",
-        timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-      });
-    
-      ///// performs the put request//////
-      async function handleUpdate(userId: string) {
-        // Logic to update the appointment
-        console.log(updateUser, updatePatient);
-        try {
-          setLoading(true)
-          const request1 = await fetch (`/api/patients/${userId}`, {
-            method: "PUT",
-            body: JSON.stringify(updatePatient),
-            headers: {"Content-Type": "application/json"}
-          })
-          const request2 = await fetch (`/api/users/${userId}`, {
-            method: "PUT",
-            body: JSON.stringify(updateUser),
-            headers: {"Content-Type": "application/json"}
-          })
-          const [response1, response2] = await Promise.all([request1, request2])
-    
-          const data1 = await response1.json()
-          const data2 = await response2.json()
-    
-          if (response1.status === 202 && response2.status === 202) {
-            Toast.fire({
-              icon: "success",
-              iconColor: "green",
-              text: `${data1?.message} ${data2?.message}`,
-            })
-          }
-          else{
-            Toast.fire({
-              icon: "error",
-              iconColor: "red",
-              text: `${data1?.message} ${data2?.message}`,
-            })
-          }
-        
-        } catch (error:any) {
-          console.log(error.message);
-          Toast.fire({
-            icon: "error",
-            iconColor: "red",
-            text: "An error occurred while updating.",
-          });
-          
-        }finally{
-            setLoading(false)
-            onRefetch()
-            setIsEditing(false);
-        }
-        // Update the appointments state after updating
+      } else {
+        Toast.fire({
+          icon: "error",
+          iconColor: "red",
+          text: `${data1?.message} ${data2?.message}`,
+        });
       }
-    
-      
-      const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // const file = event?.target?.files[0];
-        // if (file) {
-        //   setUpdateUser({...updateUser, pictureImage:"file"});
-        // }
-      };
+    } catch (error: any) {
+      console.log(error.message);
+      Toast.fire({
+        icon: "error",
+        iconColor: "red",
+        text: "An error occurred while updating.",
+      });
+    } finally {
+      setLoading(false);
+      onRefetch();
+      setIsEditing(false);
+    }
+    // Update the appointments state after updating
+  }
 
-    return (
-        <Box>
-      <Paper elevation={3} className="p-4">
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // const file = event?.target?.files[0];
+    // if (file) {
+    //   setUpdateUser({...updateUser, pictureImage:"file"});
+    // }
+  };
+
+  return (
+    <Box className="p-4">
         <Box
           sx={{
             display: "flex",
@@ -220,7 +212,7 @@ const PatientProfileDetails: React.FC<PatientProfileProps> = ({
               ) : (
                 <Avatar
                   alt={`${patient.user.firstName} ${patient.user.lastName}'s profile`}
-                  src={patient.user.profileImage || "/default-avatar.png"}
+                  src={patient.user.profileImage}
                   sx={{
                     maxWidth: "200px",
                     minWidth: "160px",
@@ -235,13 +227,13 @@ const PatientProfileDetails: React.FC<PatientProfileProps> = ({
             </div>
           </Box>
           <Box sx={{ marginTop: 0 }}>
-            <Typography variant="h4" component="div">
+            <Typography variant="h5" fontFamily="PoppinsMedium">
               {isEditing ? (
                 <TextField
                   name="firstName"
                   variant="outlined"
                   label="First Name"
-                  sx={{marginLeft: 2, marginTop: 1}}
+                  sx={{ marginLeft: 2, marginTop: 1 }}
                   size="small"
                   value={updateUser.firstName}
                   onChange={(e) =>
@@ -257,7 +249,7 @@ const PatientProfileDetails: React.FC<PatientProfileProps> = ({
                   name="lastName"
                   label="Last Name"
                   size="small"
-                  sx={{ marginTop: 1, marginLeft: {xs:2} }}
+                  sx={{ marginTop: 1, marginLeft: { xs: 2 } }}
                   value={updateUser.lastName}
                   onChange={(e) =>
                     setUpdateUser({ ...updateUser, lastName: e.target.value })
@@ -270,25 +262,26 @@ const PatientProfileDetails: React.FC<PatientProfileProps> = ({
             <Typography variant="subtitle1">
               {isEditing ? (
                 <TextField
-                    variant="outlined"
-                    name="bloodGroupName"
-                    label="Blood Group"
-                    sx={{marginTop: 2, marginLeft: 2,}}
-                    size="small"
-                    value={updatePatient.bloodGroupName}
-                    onChange={(e) =>
-                      setUpdatePatient({
-                        ...updatePatient,
-                        bloodGroupName: e.target.value,
-                      })
-                    }
-                  />
-              ) 
-              : `${patient?.patient?.bloodGroupName || ""}`}{" "}
+                  variant="outlined"
+                  name="bloodGroupName"
+                  label="Blood Group"
+                  sx={{ marginTop: 2, marginLeft: 2 }}
+                  size="small"
+                  value={updatePatient.bloodGroupName}
+                  onChange={(e) =>
+                    setUpdatePatient({
+                      ...updatePatient,
+                      bloodGroupName: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                `${patient?.patient?.bloodGroupName || ""}`
+              )}{" "}
             </Typography>
             <Divider sx={{ my: 2 }} />
             <List>
-                <ListItem>
+              <ListItem>
                 {isEditing ? (
                   <TextField
                     variant="outlined"
@@ -305,13 +298,12 @@ const PatientProfileDetails: React.FC<PatientProfileProps> = ({
                     }
                   />
                 ) : (
-                    <ListItemText
+                  <ListItemText
                     primary="Diagnosis"
                     secondary={patient?.patient?.diagnosis}
-                    />
+                  />
                 )}{" "}
-                    
-                </ListItem>
+              </ListItem>
               <ListItem>
                 {isEditing ? (
                   <TextField
@@ -391,7 +383,7 @@ const PatientProfileDetails: React.FC<PatientProfileProps> = ({
                   <ListItemText
                     primary="Date of Birth"
                     secondary={new Date(
-                     patient?.user?.dateOfBirth ?? "",
+                      patient?.user?.dateOfBirth ?? "",
                     ).toLocaleDateString()}
                   />
                 )}{" "}
@@ -409,18 +401,21 @@ const PatientProfileDetails: React.FC<PatientProfileProps> = ({
                     }
                   />
                 ) : (
-                  <ListItemText primary="Email" secondary={patient?.user?.email} />
+                  <ListItemText
+                    primary="Email"
+                    secondary={patient?.user?.email}
+                  />
                 )}{" "}
               </ListItem>
             </List>
             <Box sx={{ display: "flex", justifyContent: "flex-start", mt: 2 }}>
               {isEditing ? (
                 <LoadingButton
-                  size="large"
+                  size="small"
                   variant="contained"
                   loading={loading}
                   disabled={loading}
-                  sx={{marginLeft: 2}}
+                  sx={{ marginLeft: 2 }}
                   color="primary"
                   onClick={() => handleUpdate(patient.user.userId)}
                 >
@@ -429,7 +424,7 @@ const PatientProfileDetails: React.FC<PatientProfileProps> = ({
                 </LoadingButton>
               ) : (
                 <Button
-                  size="large"
+                  size="small"
                   variant="contained"
                   color="primary"
                   onClick={() => handleEdit(patient)}
@@ -440,9 +435,8 @@ const PatientProfileDetails: React.FC<PatientProfileProps> = ({
             </Box>
           </Box>
         </Box>
-      </Paper>
-       </Box>
-    )
-  }
+    </Box>
+  );
+};
 
- export default PatientProfileDetails 
+export default PatientProfileDetails;

@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, CircularProgress, Typography  } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useCurrentUser } from "@/hooks/customHooks";
 import PatientProfileDetails from "./subcomponents/PatientProfile";
@@ -24,9 +24,14 @@ const PatientProfileDisplay: React.FC = () => {
     try {
       /* Fetch the single doctor by userId instead.. use the currentUser 
       object to get userId, Do the same for all profile  {userId,role,profilePicture,displayName} */
-      const response = await fetch(`/api/patients/${currentUser?.userId || "bbb48da8-495a-42b5-b806-b3796fc2f843"} `, {
-        cache: "no-cache",
-      });
+      const response = await fetch(
+        `/api/patients/${
+          currentUser?.userId
+        } `,
+        {
+          cache: "no-cache",
+        },
+      );
       const data = await response.json();
       if (response.status === 200) {
         console.log(data);
@@ -39,31 +44,37 @@ const PatientProfileDisplay: React.FC = () => {
     }
   };
   useEffect(() => {
-    handleRefetch();
-  }, []);
+    if(currentUser){
+      handleRefetch();
+    }
+  }, [currentUser]);
+  
   if (!patientProfile) {
     return (
       <Box
-      sx={{
-        height: "95vh",
-        minWidth: "100%",
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: "5px",
-      }}
-    >
-      <CircularProgress color="primary" size={30} />
-      <Typography sx={{ fontWeight: "bold", color: "primary.main" }}>
-        LOADING...
-      </Typography>
-    </Box>
+        sx={{
+          height: "95vh",
+          minWidth: "100%",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: "5px",
+        }}
+      >
+        <CircularProgress color="primary" size={30} />
+        <Typography sx={{ fontWeight: "bold", color: "primary.main" }}>
+          LOADING...
+        </Typography>
+      </Box>
     );
   }
   return (
     <Box>
-        <PatientProfileDetails patient={patientProfile} onRefetch={handleRefetch} />
+      <PatientProfileDetails
+        patient={patientProfile}
+        onRefetch={handleRefetch}
+      />
     </Box>
   );
 };

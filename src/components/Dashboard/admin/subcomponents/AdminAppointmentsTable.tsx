@@ -47,14 +47,14 @@ type DoctorProfile = {
   doctor: Doctor;
   user: User;
   specialization: Specialization;
-  roomId:string
+  roomId: string;
 };
 
 type PatientProfile = {
   patient: Patient;
   user: User;
   bloodGroup: BloodGroup;
-  roomId:string
+  roomId: string;
 };
 
 type AppointmentDetail = {
@@ -81,7 +81,6 @@ const dummyUser = {
     "https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
   role: "patient",
 };
-
 
 const style = {
   position: "fixed",
@@ -139,7 +138,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
   });
 
   const handleExpand = (appointment: AppointmentDetail) => {
-    console.log({selectedAppointment:appointment});
+    console.log({ selectedAppointment: appointment });
     setSelectedAppointment(appointment);
     setExpand(true);
   };
@@ -207,7 +206,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
     console.log(updateAppointment);
     const { appointmentId, ...newUpdateAppointment } = updateAppointment;
     try {
-       setLoading(true);
+      setLoading(true);
       const request = await fetch(`/api/appointments/${appointmentId}`, {
         method: "PUT",
         body: JSON.stringify(newUpdateAppointment),
@@ -242,7 +241,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
       setLoading(true);
       console.log("New Appointment", newAppointment);
       // Logic to add a new appointment
-      console.log(currentUser?.userId)
+      console.log(currentUser?.userId);
       const request = await fetch("/api/appointments", {
         method: "POST",
         body: JSON.stringify({
@@ -317,29 +316,32 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
   };
 
   const [newEmail, setNewEmail] = useState<{
-    title: string,
-    subject: string,
-    content: string,
-    email: string,
+    title: string;
+    subject: string;
+    content: string;
+    email: string;
   }>({
     title: "",
     subject: "",
     content: "",
     email: "",
-  })
+  });
 
   const [newEmailPatient, setNewEmailPatient] = useState<{
-    title: string,
-    subject: string,
-    content: string,
-    email: string,
+    title: string;
+    subject: string;
+    content: string;
+    email: string;
   }>({
     title: "",
     subject: "",
     content: "",
     email: "",
-  })
-  const handleInputChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+  });
+
+  const handleInputChangeEmail = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { name, value } = event.target;
     setNewEmail((prevEmail) => ({
       ...prevEmail,
@@ -347,7 +349,9 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
     }));
   };
 
-  const handleInputChangeEmailPatient = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChangeEmailPatient = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { name, value } = event.target;
     setNewEmailPatient((prevEmail) => ({
       ...prevEmail,
@@ -355,42 +359,9 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
     }));
   };
 
-  const handleSendEmailToDoctor = async(email: string) => {
-    try {
-      
-      setLoading(true);
-      const request = await fetch("/api/mail", {
-        method: "POST",
-        body: JSON.stringify({
-          ...newEmail,
-          email
-        }),
-        headers: { "Content-Type": "application/json" },
-      })
-      
-      const data = await request.json();
-      if (request.status === 201) {
-        console.log(JSON.stringify(data));
-        Toast.fire({
-          icon: "success",
-          iconColor: "green",
-          text: data?.message,
-        });
-      } else {
-        Toast.fire({
-          icon: "error",
-          iconColor: "red",
-          text: data?.message,
-        });
-      }
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  }
 
-  const handleSendEmailToPatient = async(email: string) => {
+
+  const handleSendEmail = async (email: string) => {
     try {
       console.log(email);
       setLoading(true);
@@ -398,11 +369,11 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
         method: "POST",
         body: JSON.stringify({
           ...newEmail,
-          email
+          email,
         }),
         headers: { "Content-Type": "application/json" },
-      })
-      
+      });
+
       const data = await request.json();
       if (request.status === 201) {
         console.log(JSON.stringify(data));
@@ -418,12 +389,17 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
           text: data?.message,
         });
       }
-      setLoading(false);
     } catch (error) {
       console.log(error);
-      setLoading(false);
+      Toast.fire({
+        icon: "error",
+        iconColor: "red",
+        text:"Failed to send email"
+      });
+    }finally{
+      setLoading(false)
     }
-  }
+  };
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
@@ -465,12 +441,14 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
         <Table sx={{ minWidth: "70vw" }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{fontWeight:"bold"}}>Doctor</TableCell>
-              <TableCell sx={{fontWeight:"bold"}}>Doctor Name</TableCell>
-              <TableCell sx={{fontWeight:"bold"}}>Patient</TableCell>
-              <TableCell sx={{fontWeight:"bold"}}>Patient Name</TableCell>
-              <TableCell sx={{fontWeight:"bold"}}>Appointment Date</TableCell>
-              <TableCell sx={{fontWeight:"bold"}}>Actions</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Doctor</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Doctor Name</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Patient</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Patient Name</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>
+                Appointment Date
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -486,18 +464,18 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
               .map((appointment, index) => (
                 <TableRow key={index}>
                   <TableCell>
-                    <Avatar 
+                    <Avatar
                       sx={{ width: "25px", height: "25px" }}
                       alt={appointment.doctor.user.firstName}
                       src={appointment.doctor.user.profileImage}
                     />
                   </TableCell>
                   <TableCell>
-                    {appointment.doctor.user.firstName +
-                      " " +
-                      appointment.doctor.user.middleName +
-                      " " +
-                      appointment.doctor.user.lastName}
+                    {appointment.doctor.user.firstName} 
+                     {" "}
+                     {appointment.doctor.user.middleName} 
+                      {" "}
+                      {appointment.doctor.user.lastName}
                   </TableCell>
                   <TableCell>
                     <Avatar
@@ -507,12 +485,18 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                     />
                   </TableCell>
                   <TableCell>
-                    {appointment.patient.user.firstName +
-                      " " +
-                      appointment.patient.user.lastName}
+                    {appointment.patient.user.firstName}
+                    {" "}
+                    {appointment.patient.user.middleName} 
+                     {" "}
+                      {appointment.patient.user.lastName}
                   </TableCell>
                   <TableCell>
-                    {appointment.appointment.appointmentDate.toString().split("T")[0]}
+                    {
+                      appointment.appointment.appointmentDate
+                        .toString()
+                        .split("T")[0]
+                    }
                   </TableCell>
                   <TableCell>
                     <IconButton onClick={() => handleExpand(appointment)}>
@@ -536,11 +520,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
         {/* <Button variant="contained" startIcon={<Add />} onClick={handleOpen}>
         Add New Appointment
       </Button> */}
-        <Dialog
-          open={expand}
-          onClose={() => setExpand(false)}
-          
-        >
+        <Dialog open={expand} onClose={() => setExpand(false)}>
           <Box sx={style}>
             <Box
               sx={{
@@ -548,19 +528,18 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                 justifyContent: "flex-end",
                 marginTop: -5,
                 marginRight: -5,
-                padding:"5px"
+                padding: "5px",
               }}
             >
               <IconButton onClick={() => setExpand(false)}>
                 <CloseIcon color="primary" />
               </IconButton>
             </Box>
-            <Box sx={{ marginTop: 3}}>
+            <Box sx={{ marginTop: 3 }}>
               <Box
                 sx={{
                   padding: 2,
                   marginBottom: 2,
-              
                 }}
               >
                 <div>
@@ -568,7 +547,11 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                   <div style={{ marginTop: 5 }}>
                     <Typography variant="body1">
                       <strong>Appointment Date</strong>:{" "}
-                      {selectedAppointment?.appointment.appointmentDate.toString().split("T")[0]}
+                      {
+                        selectedAppointment?.appointment.appointmentDate
+                          .toString()
+                          .split("T")[0]
+                      }
                     </Typography>
                     <Typography variant="body1">
                       <strong>Appointment Status</strong>:{" "}
@@ -586,18 +569,18 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                 </div>
               </Box>
             </Box>
-            <Divider/>
-            <Box sx={{ marginTop: -1}}>
+            <Divider />
+            <Box sx={{ marginTop: -1 }}>
               <Box
                 sx={{
                   padding: 2,
                   marginBottom: 2,
-              
                 }}
               >
-           
                 <div>
-                  <Typography variant="h5" textAlign="center">Doctor Details</Typography>
+                  <Typography variant="h5" textAlign="center">
+                    Doctor Details
+                  </Typography>
                   <Box
                     sx={{
                       display: "flex",
@@ -605,15 +588,21 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                       justifyContent: "center",
                       alignItems: "center",
                       marginTop: 2,
-                      gap:4
+                      gap: 4,
                     }}
                   >
-                    <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                    <Avatar
-                      sx={{ width: "200px", height: "200px" }}
-                      alt={selectedAppointment?.doctor.user.firstName}
-                      src={selectedAppointment?.doctor.user.profileImage}
-                    />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Avatar
+                        sx={{ width: "200px", height: "200px" }}
+                        alt={selectedAppointment?.doctor.user.firstName}
+                        src={selectedAppointment?.doctor.user.profileImage}
+                      />
                     </Box>
                     <div>
                       <Typography variant="body1">
@@ -647,38 +636,62 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                       </Typography>
                       <Typography variant="body1">
                         <strong>Birth Date:</strong>{" "}
-                        {selectedAppointment?.doctor.user.dateOfBirth?.split("T")[0]}
+                        {
+                          selectedAppointment?.doctor.user.dateOfBirth?.split(
+                            "T",
+                          )[0]
+                        }
                       </Typography>
                     </div>
                   </Box>
                 </div>
                 <div>
-                   <Box sx={{display:"flex",flexDirection:"row",justifyContent:"space-between",alignItems:"center",padding:"5px",marginY:'5px'}}>
-                      <Typography variant="h5">Send Email</Typography>
-                      <Button sx={{marginTop: 1}} variant="contained" color="primary" size="small"><Link href={`/message/${selectedAppointment.doctor.roomId}`}><Chat/></Link></Button>
-                   </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "5px",
+                      marginY: "5px",
+                    }}
+                  >
+                    <Typography variant="h5">Send Email</Typography>
+                    <Button
+                      sx={{ marginTop: 1 }}
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                    >
+                      <Link
+                        href={`/message/${selectedAppointment.doctor.roomId}`}
+                      >
+                        <Chat />
+                      </Link>
+                    </Button>
+                  </Box>
                   <div className="grid mb-4 grid-cols-1 md:grid-cols-2 gap-4">
-                    <TextField 
-                    size="small" 
-                    name="subject" 
-                    value={newEmail.subject}
-                    label="Subject" 
-                    variant="outlined" 
-                    fullWidth
-                    onChange={handleInputChangeEmail} 
+                    <TextField
+                      size="small"
+                      name="subject"
+                      value={newEmail.subject}
+                      label="Subject"
+                      variant="outlined"
+                      fullWidth
+                      onChange={handleInputChangeEmail}
                     />
-                    <TextField 
-                    size="small" 
-                    name="title" 
-                    value={newEmail.title}
-                    label="Title" 
-                    variant="outlined" 
-                    fullWidth 
-                    onChange={handleInputChangeEmail}
+                    <TextField
+                      size="small"
+                      name="title"
+                      value={newEmail.title}
+                      label="Title"
+                      variant="outlined"
+                      fullWidth
+                      onChange={handleInputChangeEmail}
                     />
                   </div>
-                
-                  <TextField 
+
+                  <TextField
                     label="Message"
                     variant="outlined"
                     name="content"
@@ -688,31 +701,36 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                     rows={4}
                     onChange={handleInputChangeEmail}
                   />
-                  <LoadingButton 
+                  <LoadingButton
                     loading={loading}
-                    disabled={loading} 
-                    sx={{marginTop: 2}} 
-                    variant="contained" 
-                    color="primary" 
-                    size="small" 
-                    onClick={() => handleSendEmailToDoctor(selectedAppointment?.doctor?.user?.email || "")}
-                    >
-                      Send
-                      </LoadingButton>
+                    disabled={loading}
+                    sx={{ marginTop: 2 }}
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={() =>
+                      handleSendEmail(
+                        selectedAppointment?.doctor?.user?.email || "",
+                      )
+                    }
+                  >
+                    Send
+                  </LoadingButton>
                 </div>
               </Box>
             </Box>
-            <Divider/>
-            <Box sx={{ marginTop: 2}}>
+            <Divider />
+            <Box sx={{ marginTop: 2 }}>
               <Box
                 sx={{
                   padding: 2,
                   marginBottom: 2,
-              
                 }}
               >
                 <div>
-                  <Typography variant="h5" textAlign="center">Patients Details</Typography>
+                  <Typography variant="h5" textAlign="center">
+                    Patients Details
+                  </Typography>
                   <Box
                     sx={{
                       display: "flex",
@@ -720,15 +738,21 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                       justifyContent: "center",
                       alignItems: "center",
                       marginTop: 2,
-                      gap:4
+                      gap: 4,
                     }}
                   >
-                    <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                    <Avatar
-                      sx={{ width: "200px", height: "200px" }}
-                      alt={selectedAppointment?.patient.user.firstName}
-                      src={selectedAppointment?.patient.user.profileImage}
-                    />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Avatar
+                        sx={{ width: "200px", height: "200px" }}
+                        alt={selectedAppointment?.patient.user.firstName}
+                        src={selectedAppointment?.patient.user.profileImage}
+                      />
                     </Box>
 
                     <div>
@@ -764,36 +788,60 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                       </Typography>
                       <Typography variant="body1">
                         <strong>Birth Date:</strong>{" "}
-                        {selectedAppointment?.patient.user.dateOfBirth?.split("T")[0]}
+                        {
+                          selectedAppointment?.patient.user.dateOfBirth?.split(
+                            "T",
+                          )[0]
+                        }
                       </Typography>
                     </div>
                   </Box>
                   <div>
-                  <Box sx={{display:"flex",flexDirection:"row",justifyContent:"space-between",alignItems:"center",padding:"5px",marginY:'5px'}}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "5px",
+                        marginY: "5px",
+                      }}
+                    >
                       <Typography variant="h5">Send Email</Typography>
-                      <Button sx={{marginTop: 1}} variant="contained" color="primary" size="small"><Link href={`/message/${selectedAppointment?.patient.roomId}`}><Chat/></Link></Button>
-                   </Box>
+                      <Button
+                        sx={{ marginTop: 1 }}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                      >
+                        <Link
+                          href={`/message/${selectedAppointment?.patient.roomId}`}
+                        >
+                          <Chat />
+                        </Link>
+                      </Button>
+                    </Box>
                     <div className="grid mb-4 grid-cols-1 md:grid-cols-2 gap-4">
-                      <TextField 
-                      size="small" 
-                      name="subject"                     
-                      label="Subject" 
-                      value={newEmailPatient.subject}
-                      variant="outlined" 
-                      fullWidth
-                      onChange={handleInputChangeEmailPatient} 
+                      <TextField
+                        size="small"
+                        name="subject"
+                        label="Subject"
+                        value={newEmailPatient.subject}
+                        variant="outlined"
+                        fullWidth
+                        onChange={handleInputChangeEmailPatient}
                       />
-                      <TextField 
-                      size="small" 
-                      name="title"                     
-                      label="Title" 
-                      value={newEmailPatient.title}
-                      variant="outlined" 
-                      fullWidth 
-                      onChange={handleInputChangeEmailPatient}
+                      <TextField
+                        size="small"
+                        name="title"
+                        label="Title"
+                        value={newEmailPatient.title}
+                        variant="outlined"
+                        fullWidth
+                        onChange={handleInputChangeEmailPatient}
                       />
                     </div>
-                 
+
                     <TextField
                       variant="outlined"
                       name="content"
@@ -804,33 +852,35 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                       rows={4}
                       onChange={handleInputChangeEmailPatient}
                     />
-                    <LoadingButton 
-                      loading={loading} 
-                      disabled={loading} 
-                      sx={{marginTop: 2}} 
-                      variant="contained" 
-                      color="primary" 
-                      size="small" 
-                      onClick={() => handleSendEmailToPatient(selectedAppointment?.patient?.user.email || "")}
-                  
+                    <LoadingButton
+                      loading={loading}
+                      disabled={loading}
+                      sx={{ marginTop: 2 }}
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={() =>
+                        handleSendEmail(
+                          selectedAppointment?.patient?.user.email || "",
+                        )
+                      }
                     >
                       Send
-                      </LoadingButton>
+                    </LoadingButton>
                   </div>
                 </div>
               </Box>
             </Box>
-           
           </Box>
         </Dialog>
         <Box>
           <Dialog
             open={open}
             onClose={() => setOpen(false)}
-            sx={{ maxWidth: "lg"}}
+            sx={{ maxWidth: "lg" }}
           >
             <DialogTitle>Add Appointment</DialogTitle>
-            <DialogContent sx={{minWidth:"500px"}}>
+            <DialogContent sx={{ minWidth: "500px" }}>
               <InputLabel>Doctor Email</InputLabel>
               <TextField
                 fullWidth
@@ -893,7 +943,12 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
 
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <LoadingButton loading={loading} disabled={loading} onClick={handleAdd} color="primary">
+              <LoadingButton
+                loading={loading}
+                disabled={loading}
+                onClick={handleAdd}
+                color="primary"
+              >
                 Add
               </LoadingButton>
             </DialogActions>
@@ -906,7 +961,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
           sx={{ maxWidth: "md" }}
         >
           <DialogTitle>Update Appointment</DialogTitle>
-          <DialogContent sx={{minWidth:"500px"}}>
+          <DialogContent sx={{ minWidth: "500px" }}>
             <InputLabel>Doctor Email</InputLabel>
             <TextField
               fullWidth

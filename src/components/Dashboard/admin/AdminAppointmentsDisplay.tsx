@@ -19,14 +19,14 @@ type DoctorProfile = {
   doctor: Doctor;
   user: User;
   specialization: Specialization;
-  roomId:string
+  roomId: string;
 };
 
 type PatientProfile = {
   patient: Patient;
   user: User;
   bloodGroup: BloodGroup;
-  roomId:string
+  roomId: string;
 };
 
 type AppointmentDetail = {
@@ -116,12 +116,12 @@ const AdminAppointmentsDisplay: React.FC = () => {
     try {
       const response = await fetch(
         `/api/appointments/admins/${currentUser?.userId}`,
-        {next:{revalidate:0}},
+        { next: { revalidate: 0 } },
       );
       const data = await response.json();
       console.log(data);
       if (response.status === 200) {
-        console.log({Appointments:data.appointments})
+        console.log({ Appointments: data.appointments });
         setAppointments(data.appointments);
       } else {
         console.log(data.message);
@@ -132,7 +132,7 @@ const AdminAppointmentsDisplay: React.FC = () => {
   };
 
   useEffect(() => {
-    if(currentUser){
+    if (currentUser) {
       handleRefetch();
     }
   }, [currentUser]);

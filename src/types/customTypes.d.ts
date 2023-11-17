@@ -15,6 +15,13 @@ declare interface User {
   updatedAt?: Date;
 }
 
+declare type CurrentUser = {
+  userId: string | number;
+  displayName: string;
+  profilePicture: string;
+  role: "doctor" | "patient" | "admin" | "other" | "user";
+};
+
 declare interface Admin {
   adminId: string;
   username: string;
@@ -124,9 +131,3 @@ declare interface Action {
   type: string;
   payload: any;
 }
-declare type CurrentUser = {
-  userId: string | number;
-  displayName: string;
-  profilePicture: string;
-  role: "doctor" | "patient" | "admin" | "other" | "user";
-};

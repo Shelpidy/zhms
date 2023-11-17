@@ -8,7 +8,7 @@ interface ReturnRoomType {
   roomId: string;
   recipientId: string;
   lastMessage: string;
-  username:any;
+  username: any;
   numberOfUnreadMessages: number;
   avatar: string;
   date: string | Date;
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       limit: numberOfRecords,
     });
 
-    console.log({rooms})
+    console.log({ rooms });
 
     let newRooms = await Promise.all(
       rooms.map(async (room) => {
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         let newRoom: ReturnRoomType = {
           avatar: passiveUser?.getDataValue("profileImage") || "",
           recipientId: passiveUser?.getDataValue("userId") || "",
-          username:passiveUser?.getFullname(),
+          username: passiveUser?.getFullname(),
           roomId: room.getDataValue("roomId"),
           numberOfUnreadMessages: room.getDataValue("numberOfUnreadMessages"),
           lastMessage: room.getDataValue("lastMessage"),

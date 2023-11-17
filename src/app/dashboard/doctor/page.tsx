@@ -1,10 +1,5 @@
 "use client";
-import {
-  Add,
-  GroupAdd,
-  Groups,
-  MenuOutlined,
-} from "@mui/icons-material";
+import { Add, GroupAdd, Groups, MenuOutlined } from "@mui/icons-material";
 import { IconButton, Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ListAltIcon from "@mui/icons-material/ListAlt";
@@ -30,7 +25,7 @@ export default function DoctorDashboard() {
           className="h-screen w-40 sticky top-0"
         >
           <Menu
-             style={{
+            style={{
               backgroundColor: theme.palette.primary.main,
               height: "90vh",
               zIndex: 0,
@@ -48,7 +43,7 @@ export default function DoctorDashboard() {
               },
             }}
           >
-          <IconButton
+            <IconButton
               sx={{ marginLeft: "20px" }}
               onClick={() => setSideBarCollapse(!sideBarCollapsed)}
             >

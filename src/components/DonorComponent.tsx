@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -11,6 +11,7 @@ import {
   Link,
   Box,
   Divider,
+  CircularProgress,
 } from "@mui/material";
 import {
   FacebookOutlined,
@@ -42,7 +43,12 @@ type MediaObject = {
   link?: string;
 };
 
-function DonorComponent({ position, name, media, imageUrl }: DonorProps) {
+type DonorDetail = {
+  donor: Donor;
+  bloodGroup: BloodGroup;
+};
+
+export function DonorComponent(donor: DonorDetail) {
   const mytheme = useTheme();
   const lessThanTab = useMediaQuery(mytheme.breakpoints.down("md"));
 
@@ -63,15 +69,12 @@ function DonorComponent({ position, name, media, imageUrl }: DonorProps) {
             alignItems: "center",
           }}
         >
-          <div
-            style={{
-              width: aboutImgWidth,
-              aspectRatio: "1",
-              position: "relative",
-            }}
-          >
-            <Image priority src={imageUrl} alt="Donor" fill />
-          </div>
+          <img
+          alt="Donor"
+          className="rounded"
+          style={{ width: aboutImgWidth, aspectRatio: "1" }}
+          src={donor.donor.profileImage}
+        />
           <Box
             sx={{
               display: "flex",
@@ -85,7 +88,9 @@ function DonorComponent({ position, name, media, imageUrl }: DonorProps) {
               className="font-poppinsLight text-center text-sm md:text-2md"
               gutterBottom
             >
-              {name}
+              {donor.donor.firstName}
+              {""}
+              {donor.donor.middleName} {donor.donor.lastName}
             </Typography>
           </Box>
         </Box>
@@ -95,60 +100,43 @@ function DonorComponent({ position, name, media, imageUrl }: DonorProps) {
 }
 
 const DonorsComponent = () => {
-  const Donors: DonorProps[] = [
-    {
-      id: 1,
-      imageUrl: "/hospital/about.png",
-      position: "Chief Executive Officer",
-      name: "Isaac Johnson",
-      media: {
-        facebook: "https://www.facebook.com/profile.php?id=100015138280039",
-        twitter: "https://twitter.com/IsaacCEJohnson2",
-        instagram: "https://www.instagram.com/super_jay06",
-        linkedin: "https://www.linkedin.com/in/isaac-johnson-b50875167/",
-        github: "https://github.com/ICEJ-jr",
-      },
-    },
-    {
-      id: 2,
-      imageUrl: "/hospital/about.png",
-      position: "Chief Operating Officer",
-      name: "Mohamed Shelpidy Kamara",
-      media: {
-        facebook: "https://www.facebook.com/profile.php?id=100008312778585",
-        twitter: "https://twitter.com/medshelpidy",
-        instagram: "https://www.instagram.com/shelpidy/",
-        linkedin: "https://www.linkedin.com/in/mohamed-kamara-6894b1230/",
-        github: "https://github.com/Shelpidy",
-      },
-    },
-    {
-      id: 3,
-      imageUrl: "/hospital/about.png",
-      position: "Lead UI/UX Designer",
-      name: "Afanwi Pearl",
-      media: {
-        facebook: " https://www.facebook.com/afanwi.pearl.9",
-        twitter: " https://twitter.com/AfanwiPearl",
-        instagram: "https://instagram.com/afanwi_pearl?igshid=YmMyMTA2M2Y=",
-        linkedin: " https://www.linkedin.com/in/afanwi-pearl-94112a1aa/",
-        github: "",
-      },
-    },
-    {
-      id: 4,
-      imageUrl: "/hospital/about.png",
-      position: "Lead Mobile Developer",
-      name: "Hamed Kemokai",
-      media: {
-        facebook: " https://www.facebook.com/hamedkemokai1",
-        twitter: "https://twitter.com/Ing_hamed",
-        instagram: "",
-        linkedin: "https://www.linkedin.com/in/hamed-idriss-kemokai-57299b104/",
-        github: "",
-      },
-    },
-  ];
+  const [donors, setDonors] = useState<DonorDetail[] | null>(null);
+
+  const getDonors = async () => {
+    try {
+      const response = await fetch("/api/donors", { cache: "no-cache" });
+      const data = await response.json();
+      console.log(data);
+      setDonors(data.donors);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    }
+  };
+
+  useEffect(() => {
+    getDonors();
+  }, []);
+
+  if (!donors) {
+    return (
+      <Box
+        sx={{
+          height: "95vh",
+          minWidth: "100%",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: "5px",
+        }}
+      >
+        <CircularProgress color="primary" size={30} />
+        <Typography sx={{ fontWeight: "bold", color: "primary.main" }}>
+          LOADING...
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -165,8 +153,8 @@ const DonorsComponent = () => {
       </Box>
       <Divider sx={{ width: "80%" }} />
       <div className="py-5 px-2 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {Donors.map((item: DonorProps, index: number) => {
-          return <DonorComponent key={item.id} {...item} />;
+        {donors.map((item: DonorDetail, index: number) => {
+          return <DonorComponent key={item.donor.donorId} {...item} />;
         })}
       </div>
     </Box>

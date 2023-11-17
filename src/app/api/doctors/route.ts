@@ -72,8 +72,8 @@ export async function POST(req: Request) {
       userId,
     });
 
-    await user.update({role:"doctor"})
-    
+    await user.update({ role: "doctor" });
+
     return new Response(
       JSON.stringify({ message: "new doctor added", doctor }),
       { status: 201 },

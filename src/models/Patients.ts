@@ -33,7 +33,7 @@ Patient.init(
     },
     bloodGroupId: {
       type: DataTypes.UUID, // Change to STRING type
-      allowNull:false,
+      allowNull: false,
       references: {
         model: "BloodGroups",
         key: "bloodGroupId",

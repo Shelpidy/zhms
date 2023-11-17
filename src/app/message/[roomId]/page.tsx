@@ -70,24 +70,26 @@ const dummyData: RoomType[] = [
 ];
 
 type ChatScreenProps = {
-  params:{roomId:string}
-}
-const ChatScreen: React.FC<ChatScreenProps> = ({params}) => {
+  params: { roomId: string };
+};
+const ChatScreen: React.FC<ChatScreenProps> = ({ params }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [activeRoom, setActiveRoom] = useState<string>(params.roomId);
   const [room, setRoom] = useState<RoomType | null>(null);
   const [rooms, setRooms] = useState<RoomType[]>([]);
-  const currentUser = useCurrentUser()
+  const currentUser = useCurrentUser();
 
   let ref = React.useRef(null);
 
   const theme = useTheme();
 
-  useEffect(()=>{
-    setActiveRoom(params.roomId)
-    let room = rooms.find((room)=> room.roomId === params.roomId)
-    if(room) {setRoom(room)}
-  },[rooms])
+  useEffect(() => {
+    setActiveRoom(params.roomId);
+    let room = rooms.find((room) => room.roomId === params.roomId);
+    if (room) {
+      setRoom(room);
+    }
+  }, [rooms]);
 
   useEffect(() => {
     // Connect to the socket.io server
@@ -100,27 +102,28 @@ const ChatScreen: React.FC<ChatScreenProps> = ({params}) => {
     };
   }, []);
 
-  useEffect(()=>{
-    async function getRooms(){
-      try{
-
-        let response = await fetch(`/api/rooms/${currentUser?.userId}`,{next:{revalidate:0},method:"GET"})
-        let data = await response.json()
-        if(response.status === 200){
-          setRooms(data.rooms)
-          console.log({rooms:data.rooms})
-        }else{
-          console.log(data)
+  useEffect(() => {
+    async function getRooms() {
+      try {
+        let response = await fetch(`/api/rooms/${currentUser?.userId}`, {
+          next: { revalidate: 0 },
+          method: "GET",
+        });
+        let data = await response.json();
+        if (response.status === 200) {
+          setRooms(data.rooms);
+          console.log({ rooms: data.rooms });
+        } else {
+          console.log(data);
         }
-      }catch(err){
-        console.log(err)
+      } catch (err) {
+        console.log(err);
       }
     }
-    if(currentUser){
-      getRooms()
+    if (currentUser) {
+      getRooms();
     }
-  },[currentUser])
-
+  }, [currentUser]);
 
   return (
     <main
@@ -130,28 +133,27 @@ const ChatScreen: React.FC<ChatScreenProps> = ({params}) => {
       <Box className="w-full sticky top-[10vh] mx5 md:w-[30vw]">
         <List sx={{ width: "100%", bgcolor: "background.paper" }}>
           {rooms.map((room) => {
-            if(room.lastMessage)
-            return (
-              <MessageRoom
-                handleClick={() => {
-                  setActiveRoom(room.roomId)
-                  setRoom(room)}
-                 }
-                key={room.roomId}
-                {...room}
-              />
-            );
+            if (room.lastMessage)
+              return (
+                <MessageRoom
+                  handleClick={() => {
+                    setActiveRoom(room.roomId);
+                    setRoom(room);
+                  }}
+                  key={room.roomId}
+                  {...room}
+                />
+              );
           })}
         </List>
       </Box>
       {activeRoom && socket && (
-        <Box sx={{marginBottom:"20px"}}>
-           <MessageDisplay socket={socket} roomId={activeRoom} room={room} />
+        <Box sx={{ marginBottom: "20px" }}>
+          <MessageDisplay socket={socket} roomId={activeRoom} room={room} />
         </Box>
-
       )}
       {!activeRoom && (
-        <Box marginTop={10} sx={{width:"100%",textAlign:'center'}}>
+        <Box marginTop={10} sx={{ width: "100%", textAlign: "center" }}>
           <Typography>No Chat Selected</Typography>
         </Box>
       )}

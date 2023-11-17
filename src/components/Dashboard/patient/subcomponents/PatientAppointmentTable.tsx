@@ -46,10 +46,10 @@ const style = {
 };
 
 type DoctorProfile = {
-    doctor: Doctor;
-    user: User;
-    specialization: Specialization;
-  };
+  doctor: Doctor;
+  user: User;
+  specialization: Specialization;
+};
 
 type AppointmentDetail = {
   doctor: DoctorProfile;
@@ -62,7 +62,7 @@ type DoctorAppointmentTableProps = {
   refresh: () => void;
 };
 
-const  PatientAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
+const PatientAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
   appointments,
   refresh,
 }) => {
@@ -170,7 +170,7 @@ const  PatientAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
         />
       </Box>
       <TableContainer component={Paper}>
-        <Table sx={{minWidth:"70vw"}}>
+        <Table sx={{ minWidth: "70vw" }}>
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontWeight: "bold" }}>Doctor</TableCell>
@@ -207,9 +207,7 @@ const  PatientAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
                       alt={appointment.doctor.user.firstName}
                       src={appointment.doctor.user.profileImage}
                     ></Avatar>
-                    <Typography>
-                      {appointment.doctor.user.firstName}
-                    </Typography>
+                    <Typography>{appointment.doctor.user.firstName}</Typography>
                   </TableCell>
 
                   <TableCell>
@@ -232,12 +230,8 @@ const  PatientAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
           </TableBody>
         </Table>
       </TableContainer>
-      <Dialog
-        open={expand}
-        onClose={() => setExpand(false)}
-      >
-        <DialogContent sx={{maWidth: "400px"}}>
-        
+      <Dialog open={expand} onClose={() => setExpand(false)}>
+        <DialogContent sx={{ maWidth: "400px" }}>
           <Box
             sx={{
               display: "flex",
@@ -269,7 +263,6 @@ const  PatientAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
                 sx={{
                   padding: 2,
                   marginBottom: 2,
-                  
                 }}
               >
                 <div>
@@ -283,12 +276,18 @@ const  PatientAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
                       marginTop: 2,
                     }}
                   >
-                    <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                    <Avatar
-                      sx={{ width: "200px", height: "200px" }}
-                      alt={selectedAppointment?.doctor.user.firstName}
-                      src={selectedAppointment?.doctor.user.profileImage}
-                    />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Avatar
+                        sx={{ width: "200px", height: "200px" }}
+                        alt={selectedAppointment?.doctor.user.firstName}
+                        src={selectedAppointment?.doctor.user.profileImage}
+                      />
                     </Box>
                     <div>
                       <Typography variant="h6">
@@ -327,17 +326,18 @@ const  PatientAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
                     </div>
                   </Box>
                 </div>
-                <Button variant="contained" color="primary" size="small">Message</Button>
+                <Button variant="contained" color="primary" size="small">
+                  Message
+                </Button>
               </Paper>
             </Box>
-           
+
             <Box sx={{ marginTop: 3, textAlign: "center" }}>
               <Paper
                 variant="outlined"
                 sx={{
                   padding: 2,
                   marginBottom: 2,
-                  
                 }}
               >
                 <div>
@@ -345,7 +345,11 @@ const  PatientAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
                   <div style={{ marginTop: 5 }}>
                     <Typography variant="body1">
                       <strong>Appointment Date</strong>:{" "}
-                      {selectedAppointment?.appointment.appointmentDate.toString().split("T")[0]}
+                      {
+                        selectedAppointment?.appointment.appointmentDate
+                          .toString()
+                          .split("T")[0]
+                      }
                     </Typography>
                     <Typography variant="body1">
                       <strong>Appointment Status</strong>:{" "}
@@ -364,11 +368,8 @@ const  PatientAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
               </Paper>
             </Box>
           </Box>
-          
-       
         </DialogContent>
       </Dialog>
-     
     </Box>
   );
 };

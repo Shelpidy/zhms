@@ -346,6 +346,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
   const handleRequirerSearchChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
+    
     setSearchQueryRequirer(event.target.value);
   };
 
@@ -434,10 +435,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
             ))}
           </TableBody>
         </Table>
-        <Dialog
-          open={expand}
-          onClose={() => setExpand(false)}
-        >
+        <Dialog open={expand} onClose={() => setExpand(false)}>
           <Box sx={style}>
             <Box
               sx={{
@@ -458,7 +456,6 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
                 sx={{
                   padding: 2,
                   marginBottom: 2,
-                  boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.4)",
                 }}
               >
                 <div>
@@ -472,9 +469,12 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
                       marginTop: 2,
                     }}
                   >
-                     <Avatar
+                    <Avatar
                       alt={selectedTransfusion?.requirer.user.firstName}
-                      src={selectedTransfusion?.requirer.user.profileImage || dummyUser.profileImage}
+                      src={
+                        selectedTransfusion?.requirer.user.profileImage ||
+                        dummyUser.profileImage
+                      }
                       sx={{ width: "200px", height: "200px" }}
                     ></Avatar>
                     {/* <img
@@ -558,7 +558,10 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
                       /> */}
                       <Avatar
                         alt={selectedTransfusion?.requirer.user.firstName}
-                        src={selectedTransfusion?.requirer.user.profileImage || dummyUser.profileImage}
+                        src={
+                          selectedTransfusion?.requirer.user.profileImage ||
+                          dummyUser.profileImage
+                        }
                         sx={{ width: "200px", height: "200px" }}
                       ></Avatar>
                       <div>
@@ -606,13 +609,12 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
             sx={{ maxWidth: "lg" }}
           >
             <DialogTitle>Add Transfusion</DialogTitle>
-            <DialogContent sx={{minWidth: "500px"}}>
+            <DialogContent sx={{ minWidth: "500px" }}>
               <Card
                 variant="outlined"
                 sx={{
                   padding: 2,
                   marginBottom: 2,
-                  boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.4)",
                 }}
               >
                 <div>

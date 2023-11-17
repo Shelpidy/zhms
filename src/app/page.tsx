@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import AnimatableScroll from "@/components/AnimatableScroll";
 import CustomDropDown from "@/components/CustomDropDown";
 import Image from "next/image";
@@ -13,11 +13,10 @@ import ServicesSection from "@/components/OurServices";
 import DoctorsComponent from "@/components/DoctorComponent";
 import DonorsComponent from "@/components/DonorComponent";
 import { ServerInsertedHTMLContext } from "next/navigation";
+import { useEffect, useState } from "react";
 // ECEEF4
 
 export default function Home() {
-  // Fetch Doctor and Patient Here
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-between pb-5 px-5">
       <Banner />

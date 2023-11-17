@@ -65,7 +65,6 @@ const style = {
   maxHeight: "88vh",
   bgcolor: "background.paper",
   p: 4,
-
 };
 
 const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
@@ -202,7 +201,7 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
 
   async function handleAdd() {
     try {
-      setLoading(true)
+      setLoading(true);
       console.log("New Appointment", newPatient);
       // Logic to add a new appointment
       const request = await fetch("/api/patients", {
@@ -225,11 +224,11 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
           text: data?.message,
         });
       }
-      setLoading(false)
+      setLoading(false);
       onRefetch();
     } catch (error) {
       console.log(error);
-      setLoading(false)
+      setLoading(false);
     }
     // Update the appointments state after adding
     handleClose();
@@ -359,11 +358,7 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
               ))}
           </TableBody>
         </Table>
-        <Dialog
-          open={expand}
-          onClose={() => setExpand(false)}
-        
-        >
+        <Dialog open={expand} onClose={() => setExpand(false)}>
           <Box sx={style}>
             <Box
               sx={{
@@ -385,7 +380,7 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                 marginBottom: 0
+                  marginBottom: 0,
                 }}
               >
                 <Avatar
@@ -434,10 +429,14 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
           <Dialog
             open={open}
             onClose={() => setOpen(false)}
-            sx={{ maxWidth: "lg",alignItems:"center",justifyContent:"center" }}
+            sx={{
+              maxWidth: "lg",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
             <DialogTitle>Add Patient</DialogTitle>
-            <DialogContent sx={{minWidth:"500px"}}>
+            <DialogContent sx={{ minWidth: "500px" }}>
               <InputLabel>User Email</InputLabel>
               <TextField
                 fullWidth
@@ -473,8 +472,12 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <LoadingButton loading={loading} disabled={loading} onClick={handleAdd}>
-                  Add
+              <LoadingButton
+                loading={loading}
+                disabled={loading}
+                onClick={handleAdd}
+              >
+                Add
               </LoadingButton>
             </DialogActions>
           </Dialog>
@@ -485,7 +488,7 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
           sx={{ maxWidth: "md" }}
         >
           <DialogTitle>Update Patient</DialogTitle>
-          <DialogContent sx={{minWidth: "500px"}}>
+          <DialogContent sx={{ minWidth: "500px" }}>
             <InputLabel>Patient Email</InputLabel>
             <TextField
               fullWidth

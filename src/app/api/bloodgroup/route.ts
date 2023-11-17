@@ -4,8 +4,8 @@ import Specialization from "@/models/Specializations";
 import User from "@/models/Users";
 
 export async function GET(req: Request) {
-  try{
-  }catch (error: any) {
+  try {
+  } catch (error: any) {
     console.log(error);
     return new Response(
       JSON.stringify({ message: "server error", error: error.message }),
@@ -19,8 +19,8 @@ export async function POST(req: Request) {
     const data = await req.json();
 
     const doctor = await BloodGroup.create({
-      groupName:data.groupName,
-      volume:data.volume,
+      groupName: data.groupName,
+      volume: data.volume,
     });
 
     return new Response(
@@ -38,5 +38,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
-

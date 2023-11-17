@@ -20,6 +20,7 @@ import { LoadingButton } from "@mui/lab";
 import { PhotoCamera, Edit, SaveAlt } from "@mui/icons-material";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import { DonorComponent } from "@/components/DonorComponent";
 
 const updateUser = {
   address: "123 Main Street",
@@ -45,7 +46,6 @@ type DonorDetail = {
 };
 
 function Donors() {
-
   const [donors, setDonors] = useState<DonorDetail[] | null>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -57,14 +57,14 @@ function Donors() {
       console.log(data);
       setDonors(data.donors);
     } catch (error) {
-      console.error("Error fetching appointments:", error);
+      console.error("Error fetching:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    handleRefetch()
+    handleRefetch();
   }, []);
 
   if (!donors) {
@@ -89,94 +89,25 @@ function Donors() {
   }
   return (
     <Box>
-    <Grid container spacing={4} sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
-       <Typography variant="h4" sx={{marginTop: 15,marginBottom: 5}}>List of Donors</Typography>
-      { donors.map((donor, index) => (
-        <Grid item component={Paper} key={index} xs={12} sm={6} lg={4}>
-           <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              marginTop: 5,
-              marginLeft: 0,
-            }}
-           >
-            <div>
-            <Avatar
-                  alt={`${donor.donor.firstName || updateUser.firstName} ${ donor.donor.lastName || updateUser.lastName}'s profile`}
-                  src={donor.donor.profileImage || updateUser.profileImage || "/default-avatar.png"}
-                  sx={{
-                    maxWidth: "200px",
-                    minWidth: "100px",
-                    marginLeft: -2,
-                    marginTop: { xs: 0, sm: -38 },
-                    width: "100px", // Make the width 100%
-                    height: "100px",
-                    borderRadius: "100%", // Rounded edges
-                    cursor: "pointer",
-                  }}
-                />
-            </div>
-            <Box sx={{marginTop: -8, marginLeft: 2}}>
-            <Typography variant="h4" sx={{marginBottom: 1, marginRight: 1}}>
-            {`Mr ${donor.donor.firstName}${donor.donor.lastName}` || `${updateUser.firstName} ${updateUser.lastName}`}
-            </Typography>
-            <Divider/>
-            <List>
-               <ListItem>
-               <ListItemText
-                    primary="BloodType"
-                    secondary={donor?.bloodGroup?.groupName || updateUser.groupName}
-                  />
-               </ListItem>
-               <ListItem>
-               <ListItemText
-                    primary="Volume Donated"
-                    secondary={donor?.bloodGroup?.volume || updateUser.volume}
-                  />
-               </ListItem>
-               <ListItem>
-               <ListItemText
-                    primary="Contact"
-                    secondary={donor.donor.contactNumber || updateUser.contactNumber}
-                  />
-               </ListItem>
-               <ListItem>
-               <ListItemText
-                    primary="Email"
-                    secondary={donor.donor.email || updateUser.email}
-                  />
-               </ListItem>
-               <ListItem>
-               <ListItemText
-                    primary="Gender"
-                    secondary={donor.donor.gender|| updateUser.gender}
-                  />
-               </ListItem>
-               <ListItem>
-               <ListItemText
-                    primary="Address"
-                    secondary={donor.donor.address || updateUser.address}
-                  />
-               </ListItem>
-               <ListItem>
-               <ListItemText
-                    primary="Date Of Birth"
-                    secondary={donor.donor.dateOfBirth || updateUser.dateOfBirth}
-                  />
-               </ListItem>
-            </List>
-            </Box>
-            
-           </Box>
-        </Grid>
-      ))
-
-      }
-      
-    </Grid>
+      <Grid
+        container
+        spacing={4}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h4" sx={{ marginTop: 15, marginBottom: 5 }}>
+          List of Donors
+        </Typography>
+        <div className="py-5 px-2 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+          {donors.map((item: DonorDetail, index: number) => {
+            return <DonorComponent key={item.donor.donorId} {...item} />;
+          })}
+        </div>
+      </Grid>
     </Box>
   );
 }
