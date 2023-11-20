@@ -31,7 +31,7 @@ interface TotalAppointmentDataPoint {
 }
 
 const DoctorAppointmentDisplay: React.FC = () => {
-  const [appointments, setAppointments] = useState<AppointmentDetail[]>([]);
+  const [appointments, setAppointments] = useState<AppointmentDetail[] | null>(null);
   const [plotData, setPlotData] = useState<TotalAppointmentDataPoint[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
   const currentUser = useCurrentUser();
@@ -56,8 +56,11 @@ const DoctorAppointmentDisplay: React.FC = () => {
   };
 
   useEffect(() => {
-    handleRefetch();
-  }, []);
+    if(currentUser){
+      handleRefetch();
+
+    }
+  }, [currentUser]);
 
   if (!appointments) {
     return (

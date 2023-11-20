@@ -34,6 +34,7 @@ import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import CloseIcon from "@mui/icons-material/Close";
 import Swal from "sweetalert2";
 import moment from "moment";
+import { LoadingButton } from "@mui/lab";
 
 const Toast = Swal.mixin({
   toast: true,
@@ -100,6 +101,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
   onRefetch,
 }) => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [expand, setExpand] = useState(false);
   const [Transfusions, setTransfusions] =
@@ -285,6 +287,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
 
   async function handleAdd() {
     try {
+      setLoading(true)
       console.log("New Transfusion", newTransfusion);
       // Logic to add a new appointment
       const request = await fetch("/api/bloodtransfusions/", {
@@ -307,12 +310,15 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
           text: data?.message,
         });
       }
-      onRefetch();
+      // onRefetch();
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoading(false)
+      handleClose();
     }
     // Update the appointments state after adding
-    handleClose();
+
   }
 
   const handleSelectInputChange = (event: SelectChangeEvent<any>) => {
@@ -393,26 +399,59 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
         <Table sx={{ minWidth: "65vw" }}>
           <TableHead>
             <TableRow>
-              <TableCell>Requirers</TableCell>
-              <TableCell>Donors</TableCell>
-              <TableCell>Date Added</TableCell>
-              <TableCell>Actions</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Requirers</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>R Names</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Donors</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>D Names</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Blood Type</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Volume(litre)</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Date Added</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {transfusions.map((transfusion, index) => (
               <TableRow key={index}>
-                <TableCell>{transfusion?.donor?.email || ""}</TableCell>
                 <TableCell>
                   <Avatar
                     sx={{ width: "25px", height: "25px" }}
                     src={transfusion?.requirer.user.profileImage}
                   />
-                  <Typography>
-                    {transfusion?.requirer.user.firstName}
-                  </Typography>
+                 
                 </TableCell>
-                <TableCell>{transfusion?.donor?.email || ""}</TableCell>
+                <TableCell>
+                    {transfusion?.requirer.user.firstName}{" "}{transfusion?.requirer.user.middleName}{" "}{transfusion?.requirer.user.lastName}
+                </TableCell>
+                <TableCell>
+                  {
+                    transfusion.donor && <Avatar
+                    sx={{ width: "25px", height: "25px" }}
+                    src={transfusion?.donor?.profileImage}
+                  />
+                  }
+
+                 {
+                    ! transfusion.donor && <>
+                    N/A
+                    </>
+                  }
+                 
+                </TableCell>
+                <TableCell>
+                  {
+                    transfusion.donor && <>
+                    {transfusion?.donor.firstName}{" "}{transfusion?.donor.middleName}{" "}{transfusion?.donor.lastName}
+
+                    </>
+                  }
+                  {
+                    ! transfusion.donor && <>
+                    N/A
+                    </>
+                  }
+                </TableCell>
+                <TableCell>{transfusion.bloodGroup.groupName}</TableCell>
+                <TableCell>{transfusion.transfusion.volume}</TableCell>
                 <TableCell>
                   {moment(transfusion.transfusion.createdAt).fromNow()}
                 </TableCell>
@@ -609,7 +648,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
             sx={{ maxWidth: "lg" }}
           >
             <DialogTitle>Add Transfusion</DialogTitle>
-            <DialogContent sx={{ minWidth: "500px" }}>
+            <DialogContent sx={{ minWidth: "400px",marginLeft:10 }}>
               <Card
                 variant="outlined"
                 sx={{
@@ -618,7 +657,6 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
                 }}
               >
                 <div>
-                  <InputLabel>Search Requirer</InputLabel>
                   <TextField
                     label="Search"
                     variant="outlined"
@@ -654,7 +692,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
                               src={requirersDetail.user.profileImage}
                             />
                           </ListItemAvatar>
-                          <ListItemText primary={requirersDetail.user.email} />
+                         
                           <ListItemText
                             primary={
                               requirersDetail.user.firstName +
@@ -667,7 +705,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
                               <React.Fragment>
                                 {requirersDetail.bloodGroup.groupName}
                                 <Typography
-                                  sx={{ display: "inline" }}
+                                  sx={{ display: "inline",marginLeft:3 }}
                                   component="span"
                                   variant="caption"
                                   color="text.primary"
@@ -691,7 +729,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
                 margin="normal"
               />
 
-              <InputLabel>Blood Group</InputLabel>
+              <InputLabel sx={{marginTop:3}}>Blood Group</InputLabel>
               <Select
                 fullWidth
                 name="groupName"
@@ -707,7 +745,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
                   ),
                 )}
               </Select>
-              <InputLabel>Volume of blood in litres</InputLabel>
+              <InputLabel sx={{marginTop:3}}>Volume of blood in litres</InputLabel>
               <TextField
                 fullWidth
                 name="volume"
@@ -717,7 +755,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
                 margin="normal"
               />
 
-              <InputLabel>Transfusion Date</InputLabel>
+              <InputLabel sx={{marginTop:3}}>Transfusion Date</InputLabel>
               <TextField
                 fullWidth
                 name="transfusionDate"
@@ -732,9 +770,9 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleAdd} color="primary">
+              <LoadingButton loading={loading} disabled={loading} onClick={handleAdd} color="primary">
                 Add
-              </Button>
+              </LoadingButton>
             </DialogActions>
           </Dialog>
         </Box>
@@ -750,7 +788,6 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
               sx={{
                 padding: 2,
                 marginBottom: 2,
-                boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.4)",
               }}
             >
               <div>

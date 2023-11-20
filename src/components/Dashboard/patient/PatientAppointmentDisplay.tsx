@@ -28,7 +28,7 @@ const PatientAppointmentDisplay: React.FC = () => {
     try {
       const response = await fetch(
         `/api/appointments/patients/${
-          currentUser?.userId || "bbb48da8-495a-42b5-b806-b3796fc2f843"
+          currentUser?.userId
         }`,
         { cache: "no-cache" },
       );
@@ -41,8 +41,10 @@ const PatientAppointmentDisplay: React.FC = () => {
   };
 
   useEffect(() => {
-    handleRefetch();
-  }, []);
+    if(currentUser){
+       handleRefetch();
+    }
+  }, [currentUser]);
 
   if (!appointments) {
     return (

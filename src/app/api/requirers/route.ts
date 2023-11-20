@@ -37,24 +37,23 @@ export async function POST(req: Request) {
     const email = data.email;
     const bloodGroup = data.bloodGroup;
 
-    const user = await User.findOne({ where: { email: email } });
+    const user = await User.findOne({ where: {email} });
     if (!user) {
       return new Response(JSON.stringify({ message: "User not found" }), {
         status: 404,
       });
     }
-    const bloogGrp = await BloodGroup.create({
-      groupName: bloodGroup,
+    const bloogGrp = await BloodGroup.findOne({where:{
+      groupName: bloodGroup},
     });
-    const { bloodGroupId } = bloogGrp.dataValues;
-    const userId = user?.userId;
+    const { bloodGroupId } = bloogGrp?.dataValues;
     const requirer = await Requirer.create({
-      userId,
+      userId:user.getDataValue("userId"),
       bloodGroupId,
     });
 
     return new Response(
-      JSON.stringify({ message: "created successfully", requirer }),
+      JSON.stringify({ message: "Request successfully made", requirer }),
       { status: 201 },
     );
   } catch (error: any) {

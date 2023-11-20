@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import {
   Box,
@@ -47,9 +48,7 @@ const dummyUser = {
   firstName: "Dennis",
   gender: "male",
   lastName: "Kamara",
-  profileImage:
-    null ||
-    "https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
+  profileImage:"https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
   role: "patient",
 };
 
@@ -200,7 +199,7 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
   async function handleAdd() {
     try {
       setLoading(true);
-      console.log("New Appointment", newDoctor);
+      console.log("New Doctor", newDoctor);
       // Logic to add a new appointment
       const request = await fetch("/api/doctors", {
         method: "POST",
@@ -317,11 +316,7 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
                     />
                   </TableCell>
                   <TableCell>
-                    {doctor.user.firstName +
-                      " " +
-                      doctor.user?.middleName +
-                      " " +
-                      doctor.user.lastName}
+                    {doctor.user.firstName}{" "}{doctor.user?.middleName}{" "}{doctor.user.lastName}
                   </TableCell>
                   <TableCell>
                     {doctor?.specialization?.specializationName}

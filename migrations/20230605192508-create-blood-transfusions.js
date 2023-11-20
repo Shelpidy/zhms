@@ -19,7 +19,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      volumne: {
+      volume: {
         type: Sequelize.INTEGER,
       },
       recipientId: {

@@ -114,10 +114,21 @@ const DoctorAppointmentTable: React.FC<DoctorAppointmentTableProps> = ({
     try {
       let response = await fetch("/api/appointments/", {
         method: "PUT",
+        body:JSON.stringify({status:"Completed"}),
         headers: {
           "Content-Type": "application/json",
         },
       });
+
+      let data = await response.json();
+      if(response.status === 202){
+        refresh()  
+      }else{
+        Toast.fire({
+          text:'Failed to update appointment',
+          icon:"error"
+        })
+      }
     } catch (err) {
       console.log(err);
     }

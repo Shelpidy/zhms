@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import {
   Box,
@@ -130,11 +131,11 @@ const AdminUsersTable: React.FC<AdminUserTableProps> = ({ users }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    {user.firstName +
-                      " " +
-                      user.middleName +
-                      " " +
-                      user.lastName}
+                    {user.firstName}{" "}
+                      
+                      {user.middleName}{" "}
+                      
+                      {user.lastName}
                   </TableCell>
                   <TableCell>{user.address}</TableCell>
                   <TableCell>{user.role}</TableCell>
@@ -179,7 +180,7 @@ const AdminUsersTable: React.FC<AdminUserTableProps> = ({ users }) => {
               >
                 <Avatar
                   alt={selectedUser?.firstName}
-                  src={selectedUser?.profileImage || dummyUser.profileImage}
+                  src={selectedUser?.profileImage}
                   sx={{ width: "200px", height: "200px" }}
                 ></Avatar>
                 {/* <img

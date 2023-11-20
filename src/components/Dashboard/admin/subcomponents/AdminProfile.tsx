@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Box,
   CircularProgress,
@@ -99,10 +98,8 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [newAdmin, setNewAdmin] = useState<{
     username: string;
-    email: string;
   }>({
-    username: "",
-    email: "",
+    username: ""
   });
 
   const [updateAdmin, setUpdateAdmin] = useState<{
@@ -190,16 +187,14 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
     }
     // Update the appointments state after adding
     handleClose();
-    newAdmin.email = "";
     newAdmin.username = "";
   }
-  async function handleDelete(adminId: string) {
-    console.log(adminId);
+  async function handleDelete(userId: string) {
+
     try {
       setLoading(true);
-      // Logic to delete the appointment
-      console.log(adminId);
-      const request = await fetch(`/api/admins/${adminId}`, {
+
+      const request = await fetch(`/api/admins/${userId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
@@ -263,17 +258,18 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
   async function handleUpdate(adminId: string, userId: string) {
     // Logic to update the appointment
     console.log(updateUser, updateAdmin);
+    let {userId:_,...newUser} = updateUser;
 
     try {
       setLoading(true);
-      const request1 = await fetch(`/api/admins/${adminId}`, {
+      const request1 = await fetch(`/api/admins/${userId}`, {
         method: "PUT",
         body: JSON.stringify(updateAdmin),
         headers: { "Content-Type": "application/json" },
       });
       const request2 = await fetch(`/api/users/${userId}`, {
         method: "PUT",
-        body: JSON.stringify(updateUser),
+        body: JSON.stringify(newUser),
         headers: { "Content-Type": "application/json" },
       });
       const [response1, response2] = await Promise.all([request1, request2]);
@@ -321,7 +317,6 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
           sx={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
             textAlign: "center",
             marginTop: 3,
             marginLeft: -20,
@@ -334,7 +329,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                 <label htmlFor="avatar-input">
                   <Avatar
                     alt={`${updateUser.firstName} ${updateUser.lastName}'s profile`}
-                    src={updateUser.profileImage || updateUserDemo.profileImage}
+                    src={updateUser.profileImage}
                     sx={{
                       maxWidth: "200px",
                       minWidth: "160px",
@@ -359,7 +354,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
               ) : (
                 <Avatar
                   alt={`${updateUser.firstName} ${updateUser.lastName}'s profile`}
-                  src={updateUser.profileImage || updateUserDemo.profileImage}
+                  src={admin.user.profileImage}
                   sx={{
                     maxWidth: "200px",
                     minWidth: "200px",
@@ -487,7 +482,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                   <ListItemText
                     primary="Date of Birth"
                     secondary={new Date(
-                      admin.user.dateOfBirth || updateUserDemo.dateOfBirth,
+                      admin.user.dateOfBirth!
                     ).toLocaleDateString()}
                   />
                 )}{" "}
@@ -507,7 +502,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                 ) : (
                   <ListItemText
                     primary="Address"
-                    secondary={admin.user.address || updateUserDemo.address}
+                    secondary={admin.user.address}
                   />
                 )}{" "}
               </ListItem>
@@ -515,12 +510,12 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                 {isEditing ? (
                   <TextField
                     variant="outlined"
-                    name="address"
-                    label="Address"
+                    name="email"
+                    label="Email"
                     size="small"
-                    value={updateUser.address}
+                    value={updateUser.email}
                     onChange={(e) =>
-                      setUpdateUser({ ...updateUser, address: e.target.value })
+                      setUpdateUser({ ...updateUser, email: e.target.value })
                     }
                   />
                 ) : (
@@ -617,7 +612,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                     />
                   </TableCell>
                   <TableCell>
-                    {admin.user.firstName + " " + admin.user.lastName}
+                    {admin.user.firstName} {" "} {admin.user.middleName} {" "} {admin.user.lastName}
                   </TableCell>
                   <TableCell>{admin?.admin.username}</TableCell>
                   <TableCell>
@@ -628,7 +623,8 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
                       <ExpandCircleDownIcon />
                     </IconButton>
                     <IconButton
-                      onClick={() => handleDelete(admin.admin.adminId)}
+                      
+                      onClick={() => handleDelete(admin.user.userId)}
                     >
                       <Delete />
                     </IconButton>
@@ -739,7 +735,7 @@ const AdminProfileDetails: React.FC<AdminProfileProps> = ({
               <TextField
                 fullWidth
                 name="email"
-                value={newAdmin.email}
+                value={admin.user.email}
                 onChange={handleInputChange}
                 margin="normal"
               />

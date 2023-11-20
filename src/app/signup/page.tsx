@@ -239,6 +239,16 @@ const SignUpPage = () => {
       }}
     >
       <Card sx={{ padding: "25px", maxWidth: "800px", marginBottom: "15px" }}>
+      <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          mb="10px"
+        >
+          <ZHLogo fill="#f49d37" width={56} height={41} />
+        </Box>
         <Card
           className="hide-scrollbar"
           variant="outlined"
@@ -292,16 +302,7 @@ const SignUpPage = () => {
             </label>
           </Box>
         </Card>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          mb="10px"
-        >
-          <ZHLogo fill="#f49d37" width={56} height={41} />
-        </Box>
+       
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6} sx={{ marginTop: 3 }}>
             <TextField
@@ -453,7 +454,7 @@ const SignUpPage = () => {
               ) : null}
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ marginTop: 3 }}>
+          <Grid item xs={12} sm={6} sx={{ marginTop: 2 }}>
             <TextField
               required
               fullWidth

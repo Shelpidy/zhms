@@ -144,18 +144,10 @@ export async function DELETE(req: Request) {
         status: 404,
       });
     }
-    const { specializationId } = doctor.dataValues;
-    const spec = await Specialization.findOne({
-      where: { specializationId: specializationId },
-    });
-    if (!spec) {
-      return new Response(
-        JSON.stringify({ message: "specialization not found" }),
-        { status: 404 },
-      );
-    }
-    await spec.destroy();
+  
+    await User.update({role:"user"},{where:{userId:doctor.getDataValue("userId")}})
     await doctor.destroy();
+
     return new Response(
       JSON.stringify({
         message: "Doctor  deleted succesfully, also its specialization",

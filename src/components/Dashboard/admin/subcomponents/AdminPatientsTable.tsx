@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import {
   Box,
@@ -333,11 +334,10 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
                     />
                   </TableCell>
                   <TableCell>
-                    {patient.user.firstName +
-                      " " +
-                      patient.user.middleName +
-                      " " +
-                      patient.user.lastName}
+                    {patient.user.firstName}{" "}
+                      {patient.user.middleName}{" "}
+                      
+                      {patient.user.lastName}
                   </TableCell>
                   <TableCell>{patient?.bloodGroup?.groupName}</TableCell>
                   <TableCell>{patient?.patient.createdAt.toString()}</TableCell>

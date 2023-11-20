@@ -664,7 +664,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
                       size="small"
                     >
                       <Link
-                        href={`/message/${selectedAppointment.doctor.roomId}`}
+                        href={`/message/${selectedAppointment?.doctor?.roomId}`}
                       >
                         <Chat />
                       </Link>

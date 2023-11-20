@@ -19,6 +19,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
+        bloodGroupId: {
+        type: Sequelize.UUID,
+        references: {
+          model: "BloodGroups",
+          key: "bloodGroupId",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

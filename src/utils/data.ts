@@ -45,7 +45,7 @@ export async function sendEmail({
     // Define email data
     const mailOptions = {
       from: "teax.sl@yahoo.com", // sender's email address
-      to: email || "kamaradennis36@gmail.com", // recipient's email address
+      to: email,
       subject: subject,
       html: `<!DOCTYPE html>
       <html lang="en">
@@ -113,9 +113,10 @@ export async function sendEmail({
 
     // Send the email
     await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully");
     return { status: "success", message: "Email sent successfully" };
 
-    console.log("Email sent successfully");
+  
   } catch (error) {
     console.error("Error sending email:", error);
     return error;

@@ -13,7 +13,7 @@ interface UserAttributes {
   address?: string;
   password: string;
   email: string;
-  role: "patient" | "doctor" | "admin";
+  role: "patient" | "doctor" | "admin"|"user";
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -36,7 +36,7 @@ class User
   public address?: string;
   public password!: string;
   public email!: string;
-  public role!: "patient" | "doctor" | "admin";
+  public role!: "patient" | "doctor" | "admin"|"user";
   public createdAt?: Date;
   public updatedAt?: Date;
 

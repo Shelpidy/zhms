@@ -196,14 +196,7 @@ export async function DELETE(req: Request) {
         status: 404,
       });
     }
-    const { bloodGroupId } = patient.dataValues;
-    const singleBloodGroup = await BloodGroup.findOne({
-      where: { bloodGroupId: bloodGroupId },
-    });
-    if (!singleBloodGroup) {
-      return new Response(JSON.stringify({ message: "BloodGroup not found" }));
-    }
-    await singleBloodGroup.destroy();
+    await User.update({role:"user"},{where:{userId:patient.getDataValue("userId")}})
     await patient.destroy();
     return new Response(
       JSON.stringify({ message: "patient deleted successfully" }),

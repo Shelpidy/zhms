@@ -22,11 +22,14 @@ import {
   SelectChangeEvent,
   MenuItem,
   Select,
+  Avatar,
 } from "@mui/material";
 import { Delete, Edit, Add, Search } from "@mui/icons-material";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import CloseIcon from "@mui/icons-material/Close";
 import Swal from "sweetalert2";
+import moment from "moment";
+import { LoadingButton } from "@mui/lab";
 
 type RequirerDetails = {
   requirer: Requirer;
@@ -39,19 +42,6 @@ interface AdminRequirerTableProps {
   onRefetch: () => void;
 }
 
-const dummyUser = {
-  address: "123 Main Street",
-  contactNumber: "1234567890",
-  dateOfBirth: "31st August, 2023",
-  email: "kamaradennis36@gmail.com",
-  firstName: "Dennis",
-  gender: "male",
-  lastName: "Kamara",
-  profileImage:
-    null ||
-    "https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-  role: "patient",
-};
 
 const style = {
   position: "fixed",
@@ -73,6 +63,7 @@ const AdminRequirersTable: React.FC<AdminRequirerTableProps> = ({
   const [open, setOpen] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [expand, setExpand] = useState(false);
+  const [loading,setLoading] = useState(false)
   const [selectedRequirer, setSelectedRequirer] =
     useState<RequirerDetails | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -151,7 +142,8 @@ const AdminRequirersTable: React.FC<AdminRequirerTableProps> = ({
 
   async function handleAdd() {
     try {
-      console.log("New Appointment", newRequirer);
+      console.log("New Requirer", newRequirer);
+      setLoading(true)
       // Logic to add a new appointment
       const request = await fetch("/api/requirers", {
         method: "POST",
@@ -176,6 +168,8 @@ const AdminRequirersTable: React.FC<AdminRequirerTableProps> = ({
       onRefetch();
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoading(false)
     }
     // Update the appointments state after adding
     handleClose();
@@ -239,10 +233,11 @@ const AdminRequirersTable: React.FC<AdminRequirerTableProps> = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Requirer</TableCell>
-              <TableCell>Address</TableCell>
-              <TableCell>Date Added</TableCell>
-              <TableCell>Actions</TableCell>
+               <TableCell sx={{ fontWeight: "bold" }}>Requirer</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Address</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Date Added</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -250,11 +245,23 @@ const AdminRequirersTable: React.FC<AdminRequirerTableProps> = ({
               .filter((requirer) => requirer.user.email.includes(searchQuery))
               .map((requirer, index) => (
                 <TableRow key={index}>
-                  <TableCell>{requirer?.user?.email}</TableCell>
-                  <TableCell>{requirer?.user?.address}</TableCell>
-                  <TableCell>
-                    {requirer?.requirer?.createdAt.toString()}
+                 <TableCell>
+                    <Avatar
+                      sx={{ width: "25px", height: "25px" }}
+                      alt={requirer.user.firstName}
+                      src={requirer.user.profileImage}
+                    />
                   </TableCell>
+                  <TableCell>
+                    {requirer.user.firstName}{" "}
+                      
+                      {requirer.user.middleName}{" "}
+                      
+                      {requirer.user.lastName}
+                  </TableCell>
+                  <TableCell>{requirer.user.address}</TableCell>
+  
+                  <TableCell>{moment(requirer.requirer.createdAt).fromNow()}</TableCell>
                   <TableCell>
                     <IconButton onClick={() => handleExpand(requirer)}>
                       <ExpandCircleDownIcon />
@@ -298,21 +305,16 @@ const AdminRequirersTable: React.FC<AdminRequirerTableProps> = ({
                   marginTop: 2,
                 }}
               >
-                <img
-                  alt="Profile"
-                  style={{
-                    width: "28%", // Adjust the width as needed
-                    height: "auto", // Auto height to maintain aspect ratio
-                    maxWidth: "75%",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                  src={dummyUser.profileImage} // Use user's profile image
-                />
+                 <Avatar
+                  alt={selectedRequirer?.user.firstName}
+                  src={selectedRequirer?.user.profileImage}
+                  sx={{ width: "200px", height: "200px" }}
+                ></Avatar>
                 <div>
                   <Typography variant="h6">
                     <strong>Requirer Name:</strong>{" "}
                     {selectedRequirer?.user.firstName}{" "}
+                      {selectedRequirer?.user.middleName}{" "}
                     {selectedRequirer?.user.lastName}
                   </Typography>
                   <Typography variant="body1">
@@ -376,9 +378,9 @@ const AdminRequirersTable: React.FC<AdminRequirerTableProps> = ({
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleAdd} color="primary">
+              <LoadingButton loading={loading} disabled={loading} onClick={handleAdd} color="primary">
                 Add
-              </Button>
+              </LoadingButton>
             </DialogActions>
           </Dialog>
         </Box>

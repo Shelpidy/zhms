@@ -72,7 +72,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
       {
         username,
       },
-      { where: { adminId: id } },
+      { where: { userId: id } },
     );
 
     return new Response(
@@ -96,12 +96,13 @@ export async function DELETE(req: Request, { params }: RouteParams) {
         status: 404,
       });
     }
-    const admin = await Admin.findOne({ where: { adminId: id } });
+    const admin = await Admin.findOne({ where: { userId: id } });
     if (!admin) {
       return new Response(JSON.stringify({ message: "missing admin" }), {
         status: 404,
       });
     }
+    await User.update({role:"user"},{where:{userId:id}})
     await admin.destroy();
     return new Response(JSON.stringify({ message: "admin deleted" }), {
       status: 203,

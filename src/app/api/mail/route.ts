@@ -17,11 +17,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (userInfo) {
-      await sendEmail({ message, title, subject, email });
+      let resp = await sendEmail({ message, title, subject, email });
       return new Response(
-        JSON.stringify({
-          message: `Email sent`,
-        }),
+        JSON.stringify(resp),
         { status: 201 },
       );
     } else {

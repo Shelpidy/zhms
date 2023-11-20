@@ -53,7 +53,7 @@ const AddAdminForm = () => {
         alignItems: "center",
       }}
     >
-      <Typography variant="h6">Add Blood Group</Typography>
+      <Typography variant="h6">Add Admin Role</Typography>
       <Box
         sx={{
           marginTop: 2,

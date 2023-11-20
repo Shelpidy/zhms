@@ -120,6 +120,7 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
   async function handleUpdate(userId: string) {
     // Logic to update the appointment
     console.log(updateUser, updateDoctor);
+    let {userId:_,...newUser} = updateUser;
     try {
       setLoading(true);
       const request1 = await fetch(`/api/doctors/${userId}`, {
@@ -129,7 +130,7 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
       });
       const request2 = await fetch(`/api/users/${userId}`, {
         method: "PUT",
-        body: JSON.stringify(updateUser),
+        body: JSON.stringify(newUser),
         headers: { "Content-Type": "application/json" },
       });
       const [response1, response2] = await Promise.all([request1, request2]);
@@ -178,7 +179,6 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
           sx={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
             marginTop: 3,
           }}
         >
@@ -213,18 +213,18 @@ const DoctorProfileDetails: React.FC<DoctorProfileProps> = ({
                 </label>
               ) : (
                 <Avatar
-                  alt={`${doctor.user.firstName} ${doctor.user.lastName}'s profile`}
-                  src={doctor.user.profileImage || "/default-avatar.png"}
-                  sx={{
-                    maxWidth: "200px",
-                    minWidth: "160px",
-                    marginTop: { xs: 0, sm: -33 },
-                    width: "auto", // Make the width 100%
-                    height: "auto",
-                    borderRadius: "10px", // Rounded edges
-                    cursor: "pointer",
-                  }}
-                />
+                alt={`${doctor.user.firstName} ${doctor.user.lastName}'s profile`}
+                src={doctor.user.profileImage}
+                sx={{
+                  maxWidth: "200px",
+                  minWidth: "200px",
+                  marginTop: "8px",
+                  width: "auto", // Make the width 100%
+                  height: "auto",
+                  borderRadius: "10px", // Rounded edges
+                  cursor: "pointer",
+                }}
+              />
               )}
             </div>
           </Box>

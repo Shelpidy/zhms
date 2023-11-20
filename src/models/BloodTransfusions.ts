@@ -21,7 +21,7 @@ BloodTransfusion.init(
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    volumne: {
+    volume: {
       type: DataTypes.INTEGER,
     },
     recipientId: {
