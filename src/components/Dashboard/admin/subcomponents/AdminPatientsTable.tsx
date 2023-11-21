@@ -155,6 +155,7 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
           iconColor: "green",
           text: data?.message,
         });
+        onRefetch();
       } else {
         Toast.fire({
           icon: "error",
@@ -162,7 +163,7 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
           text: data?.message,
         });
       }
-      onRefetch();
+     
       // Update the appointments state after deletion
     } catch (error) {
       console.log(error);
@@ -218,6 +219,7 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
           iconColor: "green",
           text: data?.message,
         });
+        onRefetch();
       } else {
         Toast.fire({
           icon: "error",
@@ -226,7 +228,7 @@ const AdminPatientsTable: React.FC<AdminPatientTableProps> = ({
         });
       }
       setLoading(false);
-      onRefetch();
+    
     } catch (error) {
       console.log(error);
       setLoading(false);

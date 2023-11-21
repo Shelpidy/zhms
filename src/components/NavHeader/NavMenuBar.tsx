@@ -110,7 +110,6 @@ function NavMenuBar({ setThemeMode }: NavMenuBarProps) {
                 </Badge>
               </Link>
             )}
-
             <IconButton onClick={setThemeMode} sx={{ color: "white" }}>
               {theme.palette.mode === "light" ? (
                 <DarkModeSharp color="primary" />

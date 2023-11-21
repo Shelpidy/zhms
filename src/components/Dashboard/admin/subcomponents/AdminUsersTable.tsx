@@ -25,29 +25,24 @@ import {
   Typography,
   Avatar,
 } from "@mui/material";
-import { Delete, Edit, Add, Search } from "@mui/icons-material";
+import { Delete, Edit, Add, Search, Refresh } from "@mui/icons-material";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import CloseIcon from "@mui/icons-material/Close";
 import Swal from "sweetalert2";
 import moment from "moment";
+import { LoadingButton } from "@mui/lab";
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: "center",
+  timer: 3000,
+  timerProgressBar: true,
+  showConfirmButton: false,
+});
 
 interface AdminUserTableProps {
   users: User[];
 }
-
-const dummyUser = {
-  address: "123 Main Street",
-  contactNumber: "1234567890",
-  dateOfBirth: "31st August, 2023",
-  email: "kamaradennis36@gmail.com",
-  firstName: "Dennis",
-  gender: "male",
-  lastName: "Kamara",
-  profileImage:
-    null ||
-    "https://www.bing.com/th?id=OIP.rq0bLboVfwhtwS9EnvZ0CAHaJl&w=76&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-  role: "patient",
-};
 
 const style = {
   position: "fixed",
@@ -62,15 +57,44 @@ const style = {
   overflow: "auto",
 };
 
-const AdminUsersTable: React.FC<AdminUserTableProps> = ({ users }) => {
+const AdminUsersTable: React.FC<AdminUserTableProps> = ({ users:_users }) => {
   const [expand, setExpand] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [users,setUsers] = useState<User[]>(_users)
+  const [loading,setLoading] = useState<boolean>(false)
+  
 
   const handleExpand = (users: User) => {
     console.log(users);
     setSelectedUser(users);
     setExpand(true);
+  };
+
+  const handleRefetch = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch("/api/users", { cache: "no-cache",next:{revalidate:0} });
+      const data = await response.json();
+      if(response.status === 200){
+        console.log(data);
+        setUsers(data.users);
+      }else{
+        Toast.fire({
+          text:"Refresh failed. Try again",
+          icon:"warning"
+        })
+      }
+      
+    } catch (error) {
+      console.error("Error trying to refresh:", error);
+      Toast.fire({
+        text:"Refresh failed. Try again",
+        icon:"warning"
+      })
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,6 +125,7 @@ const AdminUsersTable: React.FC<AdminUserTableProps> = ({ users }) => {
             ),
           }}
         />
+       <LoadingButton onClick={handleRefetch} loading={loading} disabled={loading}><Refresh></Refresh></LoadingButton>
       </Box>
       <TableContainer component={Paper}>
         <Table>

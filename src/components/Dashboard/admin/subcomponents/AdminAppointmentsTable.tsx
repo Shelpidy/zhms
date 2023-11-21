@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import {
   Box,
@@ -246,10 +247,11 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
         method: "POST",
         body: JSON.stringify({
           ...newAppointment,
-          userId: currentUser?.userId || "dcc3d3a5-f1bc-49c6-bd73-f4bf7747482d",
+          userId: currentUser?.userId
         }),
         headers: { "Content-Type": "application/json" },
       });
+
       const data = await request.json();
       if (request.status === 201) {
         console.log(JSON.stringify(data));
@@ -405,7 +407,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
   };
 
   return (
-    <Box>
+    <Box sx={{marginBottom:10}}>
       <Box
         sx={{
           display: "flex",
@@ -873,7 +875,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
             </Box>
           </Box>
         </Dialog>
-        <Box>
+       
           <Dialog
             open={open}
             onClose={() => setOpen(false)}
@@ -953,7 +955,7 @@ const AdminAppointmentsTable: React.FC<AdminAppointmentsTableProps> = ({
               </LoadingButton>
             </DialogActions>
           </Dialog>
-        </Box>
+        
 
         <Dialog
           open={openUpdate}

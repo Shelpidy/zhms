@@ -68,7 +68,7 @@ export async function POST(req: Request) {
     const donor = await Donor.findOne({ where: { email: donorEmail } });
     const { groupName, donorEmail: de, ...transfusionData } = data;
     const bloodTransfusion = await BloodTransfusion.create({
-      donorId: donor?.getDataValue("donorId") || null,
+      donorId: donor?.getDataValue("donorId"),
       recipientId: requirerId,
       bloodGroupId: bloodGroup?.getDataValue("bloodGroupId"),
       ...transfusionData,

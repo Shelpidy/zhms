@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -303,6 +304,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
           iconColor: "green",
           text: data?.message,
         });
+        onRefetch()
       } else {
         Toast.fire({
           icon: "error",
@@ -648,7 +650,7 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
             sx={{ maxWidth: "lg" }}
           >
             <DialogTitle>Add Transfusion</DialogTitle>
-            <DialogContent sx={{ minWidth: "400px",marginLeft:10 }}>
+            <DialogContent sx={{ minWidth: "400px"}}>
               <Card
                 variant="outlined"
                 sx={{
@@ -728,7 +730,6 @@ const AdminTransfionsTable: React.FC<AdminBloodTransfusionTableProps> = ({
                 onChange={handleInputChange}
                 margin="normal"
               />
-
               <InputLabel sx={{marginTop:3}}>Blood Group</InputLabel>
               <Select
                 fullWidth

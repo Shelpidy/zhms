@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import {
   Box,
@@ -352,6 +353,7 @@ const AdminDonorsTable: React.FC<AdminDonorTableProps> = ({
     try {
       setLoading(true);
       console.log("New Donor", newDonor);
+      const {donorId:_,...donorWithoutId} = newDonor
       let response = await fetch(newDonor.profileImage);
       let blob = await response.blob();
       let profileImage = await uploadFileToFirebase({
@@ -362,7 +364,7 @@ const AdminDonorsTable: React.FC<AdminDonorTableProps> = ({
       // Logic to add a new appointment
       const request = await fetch("/api/donors", {
         method: "POST",
-        body: JSON.stringify({ ...newDonor, profileImage }),
+        body: JSON.stringify({ ...donorWithoutId, profileImage }),
         headers: { "Content-Type": "application/json" },
       });
       const data = await request.json();

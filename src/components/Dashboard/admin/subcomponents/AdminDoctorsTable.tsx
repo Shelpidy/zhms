@@ -214,6 +214,7 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
           iconColor: "green",
           text: data?.message,
         });
+        onRefetch()
       } else {
         Toast.fire({
           icon: "error",
@@ -222,7 +223,6 @@ const AdminDoctorsTable: React.FC<AdminDoctorTableProps> = ({
         });
       }
       setLoading(false);
-      onRefetch();
     } catch (error) {
       console.log(error);
       setLoading(false);
